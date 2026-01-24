@@ -55,7 +55,7 @@ Module.register("MMM-MyWeatherForecast", {
             if (payload.daily.data) {
                 payload.daily.data.slice(1,5).forEach((day,index)=>{
                     const date = new Date(today);
-                    date.setDate(today.getDate() + index +1);
+                    date.setDate(today.getDate() + index + 1);
                     day.date = date.toISOString().split("T")[0];
                 });
             }
@@ -121,7 +121,10 @@ Module.register("MMM-MyWeatherForecast", {
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
-        conditionText.innerHTML = this.translate(current.icon.toUpperCase()) || current.summary;
+
+        // Translate condition, fallback to summary
+        const translatedCondition = this.translate(current.icon.toUpperCase());
+        conditionText.innerHTML = translatedCondition !== current.icon.toUpperCase() ? translatedCondition : current.summary;
 
         details.appendChild(temp);
         details.appendChild(conditionText);

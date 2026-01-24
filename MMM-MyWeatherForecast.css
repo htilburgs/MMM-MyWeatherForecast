@@ -2,34 +2,36 @@
 
 .myweather-wrapper {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    color: #ffffff; /* Text color (adjust to your mirror theme) */
+    color: #ffffff; /* Adjust to your mirror theme */
     padding: 10px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* Center everything horizontally */
 }
 
 /* Current weather section */
 .current-weather {
     display: flex;
-    align-items: center;
+    flex-direction: column;   /* icon above text */
+    align-items: center;      /* center horizontally */
     margin-bottom: 10px;
 }
 
 .current-icon {
-    width: 64px;
-    height: 64px;
-    margin-right: 10px;
+    width: 96px;              /* larger icon */
+    height: 96px;
+    margin-bottom: 8px;       /* space between icon and text */
 }
 
 .current-details {
     display: flex;
     flex-direction: column;
+    align-items: center;      /* center temperature and condition */
 }
 
 .current-temp {
-    font-size: 2em;
+    font-size: 2.2em;
     font-weight: bold;
 }
 
@@ -38,23 +40,23 @@
     margin-top: 2px;
 }
 
+/* Sunrise / Sunset text */
 .sun-times {
     font-size: 0.8em;
     margin-top: 4px;
-    text-align: center;        /* center the text */
-    width: 100%;               /* make sure it spans the container */
+    text-align: center;        /* center text */
+    width: 100%;
     display: block;
 }
 
 .sun-times span {
-    margin: 0 5px; /* small horizontal spacing */
+    margin: 0 5px;             /* spacing between sunrise and sunset */
 }
-
 
 /* Forecast bar */
 .forecast-bar {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;   /* center forecast days */
     width: 100%;
     margin-top: 10px;
 }
@@ -63,7 +65,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 8px;
+    margin: 0 5px;
 }
 
 .forecast-day-name {
@@ -86,5 +88,5 @@
     font-size: 0.7em;
     color: #ccc;
     margin-top: 5px;
-    text-align: left;
+    text-align: center;
 }

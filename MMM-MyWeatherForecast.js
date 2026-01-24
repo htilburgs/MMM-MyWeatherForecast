@@ -17,14 +17,7 @@ Module.register("MMM-MyWeatherForecast", {
         this.lastUpdate = null;
         this.moduleTranslations = {};
 
-        fetch(`modules/MMM-MyWeatherForecast/translations/${this.config.lang || "en"}.json`)
-            .then(res => res.json())
-            .then(json => {
-                this.moduleTranslations = json;
-                this.updateDom();
-            })
-            .catch(err => console.error("[MMM-MyWeatherForecast] Translation load failed:", err));
-
+        this.loadTranslations();
         this.scheduleUpdate();
     },
 
@@ -32,7 +25,24 @@ Module.register("MMM-MyWeatherForecast", {
         return ["MMM-MyWeatherForecast.css"];
     },
 
-    /* -------------------- ICON & TRANSLATION MAPS -------------------- */
+    /* -------------------- TRANSLATIONS -------------------- */
+
+    async loadTranslations() {
+        const lang = this.config.lang || "en";
+        try {
+            const res = await fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`);
+            this.moduleTranslations = await res.json();
+            this.updateDom();
+        } catch (err) {
+            console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
+        }
+    },
+
+    translate(key) {
+        return this.moduleTranslations[key] || key;
+    },
+
+    /* -------------------- ICONS -------------------- */
 
     iconMaps: {
         standard: {
@@ -85,12 +95,8 @@ Module.register("MMM-MyWeatherForecast", {
     getWeatherIcon(condition) {
         const set = this.iconMaps[this.config.iconSet] || this.iconMaps.standard;
         const file = set[condition] || this.iconMaps.standard[condition] || "clear.png";
-        const folder = Object.keys(this.iconMaps).includes(this.config.iconSet) && set[condition] ? this.config.iconSet : "standard";
+        const folder = set[condition] ? this.config.iconSet : "standard";
         return `modules/MMM-MyWeatherForecast/images/${folder}/${file}`;
-    },
-
-    translate(key) {
-        return this.moduleTranslations[key] || key;
     },
 
     getTranslationKey(icon) {
@@ -122,8 +128,9 @@ Module.register("MMM-MyWeatherForecast", {
             this.weatherData = payload;
             this.lastUpdate = new Date();
             this.updateDom(1000);
+        } else if (notification === "WEATHER_ERROR") {
+            console.error("[MMM-MyWeatherForecast] WEATHER_ERROR:", payload);
         }
-        if (notification === "WEATHER_ERROR") console.error("[MMM-MyWeatherForecast] WEATHER_ERROR:", payload);
     },
 
     getDayName(timestamp) {
@@ -146,9 +153,10 @@ Module.register("MMM-MyWeatherForecast", {
         return img;
     },
 
+    /* -------------------- BUILD DOM -------------------- */
+
     getDom() {
-        const wrapper = document.createElement("div");
-        wrapper.className = "myweather-wrapper";
+        const wrapper = this.createDiv("myweather-wrapper");
 
         if (!this.weatherData || !Object.keys(this.moduleTranslations).length) {
             wrapper.innerHTML = this.translate("LOADING");
@@ -157,34 +165,29 @@ Module.register("MMM-MyWeatherForecast", {
 
         const { currently, daily } = this.weatherData;
 
-        // ---- Current Weather ----
+        // Current Weather
         const currentDiv = this.createDiv("current-weather");
         const icon = this.createImg("current-icon", this.getWeatherIcon(currently.icon));
-
         const details = this.createDiv("current-details");
         details.appendChild(this.createDiv("current-temp", `${currently.temperature.toFixed(1)}${this.getTempUnit()}`));
         const translationKey = this.getTranslationKey(currently.icon);
         details.appendChild(this.createDiv("current-condition", translationKey ? this.translate(translationKey) : currently.summary));
-
         currentDiv.appendChild(icon);
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
 
-        // ---- Sun Times ----
+        // Sun Times
         if (this.config.showSunTimes && daily?.data?.[0]) {
             const today = daily.data[0];
-            const sunDiv = this.createDiv("sun-times");
             const sunrise = new Date(today.sunriseTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
             const sunset = new Date(today.sunsetTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            sunDiv.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
-            wrapper.appendChild(sunDiv);
+            wrapper.appendChild(this.createDiv("sun-times", `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`));
         }
 
-        // ---- Forecast ----
+        // Forecast
         if (this.config.showForecast && daily?.data?.length > 1) {
             wrapper.appendChild(this.createDiv("forecast-header", this.translate("FORECAST_4_DAYS")));
             const bar = this.createDiv("forecast-bar");
-
             daily.data.slice(1, 5).forEach(day => {
                 const dayDiv = this.createDiv("forecast-day");
                 dayDiv.appendChild(this.createDiv("forecast-day-name", this.getDayName(day.time)));
@@ -192,11 +195,10 @@ Module.register("MMM-MyWeatherForecast", {
                 dayDiv.appendChild(this.createDiv("forecast-temp", `${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}`));
                 bar.appendChild(dayDiv);
             });
-
             wrapper.appendChild(bar);
         }
 
-        // ---- Last Update ----
+        // Last Update
         if (this.config.showLastUpdate && this.lastUpdate) {
             wrapper.appendChild(this.createDiv("last-update", `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`));
         }

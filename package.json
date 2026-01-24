@@ -3,14 +3,8 @@
   "version": "1.0.0",
   "description": "MagicMirror² module for weather forecast using PirateSky API",
   "main": "MMM-MyWeatherForecast.js",
-  "scripts": {
-    "postinstall": "npm install express node-fetch cors"
-  },
+  "scripts": {},
   "author": "H. Tilburgs",
   "license": "MIT",
-  "dependencies": {
-    "express": "^4.18.2",
-    "node-fetch": "^3.3.2",
-    "cors": "^2.8.5"
-  }
+  "dependencies": {}
 }

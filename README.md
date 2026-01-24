@@ -18,7 +18,9 @@ npm install
         latitude: "52.3676",
         longitude: "4.9041",
         showForecast: true,
-        lang: "en"
+        showLastUpdate: true,
+        lang: "nl"
     }
 }
+
 ```

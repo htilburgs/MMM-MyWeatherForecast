@@ -53,6 +53,16 @@
     margin: 0 5px;
 }
 
+/* Forecast Header */
+.forecast-header {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+    color: #ffffff; /* same as your module text */
+}
+
 /* Forecast bar */
 .forecast-bar {
     display: flex;

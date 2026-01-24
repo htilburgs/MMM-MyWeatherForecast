@@ -16,7 +16,7 @@ Module.register("MMM-MyWeatherForecast", {
         this.lastUpdate = null;
         this.moduleTranslations = {};
 
-        // --- Load translation JSON manually ---
+        // Load translation JSON manually
         const lang = this.config.lang || "en";
         fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`)
             .then(res => res.json())
@@ -69,7 +69,6 @@ Module.register("MMM-MyWeatherForecast", {
         }
     },
 
-    // --- Manual translation ---
     translateModule: function(key) {
         return (this.moduleTranslations && this.moduleTranslations[key]) || key;
     },
@@ -93,10 +92,9 @@ Module.register("MMM-MyWeatherForecast", {
         return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
-    // --- Translated weekday names ---
     getDayName: function(dateString) {
         const date = new Date(dateString);
-        const weekdayIndex = date.getDay(); // 0 = Sunday
+        const weekdayIndex = date.getDay();
         const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
         return this.translateModule(weekdays[weekdayIndex]);
     },
@@ -105,7 +103,6 @@ Module.register("MMM-MyWeatherForecast", {
         const wrapper = document.createElement("div");
         wrapper.className = "myweather-wrapper";
 
-        // --- Show loading if weather data or translations not ready ---
         if (!this.weatherData || !this.moduleTranslations || Object.keys(this.moduleTranslations).length === 0) {
             wrapper.innerHTML = this.translateModule("LOADING") || "Loading...";
             return wrapper;
@@ -114,7 +111,7 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.currently;
         const forecast = this.weatherData.daily;
 
-        // --- Current weather ---
+        // Current weather
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
 
@@ -140,7 +137,7 @@ Module.register("MMM-MyWeatherForecast", {
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
 
-        // --- Sunrise / Sunset ---
+        // Sunrise / Sunset
         if (this.config.showSunTimes && this.weatherData.daily.data) {
             const todayData = this.weatherData.daily.data[0];
             const sun = document.createElement("div");
@@ -151,16 +148,8 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(sun);
         }
 
-        // --- Forecast header + 4-day forecast ---
+        // Forecast
         if (this.config.showForecast && forecast && forecast.data) {
-
-            // Header
-            const forecastHeader = document.createElement("div");
-            forecastHeader.className = "forecast-header";
-            forecastHeader.innerHTML = this.translateModule("FORECAST");
-            wrapper.appendChild(forecastHeader);
-
-            // Forecast bar
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
 
@@ -190,7 +179,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(forecastDiv);
         }
 
-        // --- Last update ---
+        // Last update
         if (this.config.showLastUpdate && this.lastUpdate) {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";

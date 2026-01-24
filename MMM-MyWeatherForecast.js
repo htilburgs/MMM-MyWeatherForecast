@@ -8,7 +8,7 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: config.language || "en",
+        lang: "en", // Module-specific language, independent of MagicMirror global language
     },
 
     start: function() {
@@ -41,7 +41,7 @@ Module.register("MMM-MyWeatherForecast", {
             userlat: this.config.userlat,
             userlon: this.config.userlon,
             units: this.config.units,
-            lang: this.config.lang
+            lang: this.config.lang // use module language for API if needed
         });
     },
 
@@ -123,8 +123,9 @@ Module.register("MMM-MyWeatherForecast", {
         conditionText.className = "current-condition";
 
         // Translate condition, fallback to summary
-        const translatedCondition = this.translate(current.icon.toUpperCase());
-        conditionText.innerHTML = translatedCondition !== current.icon.toUpperCase() ? translatedCondition : current.summary;
+        const iconKey = current.icon.toUpperCase();
+        const translatedCondition = this.translate(iconKey);
+        conditionText.innerHTML = translatedCondition !== iconKey ? translatedCondition : current.summary;
 
         details.appendChild(temp);
         details.appendChild(conditionText);

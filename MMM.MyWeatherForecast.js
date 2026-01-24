@@ -36,6 +36,17 @@ Module.register("MMM-MyWeatherForecast", {
         try {
             const response = await fetch(url);
             const data = await response.json();
+
+            // Ensure each forecast day has a date for localized day names
+            const today = new Date();
+            if (data.forecast) {
+                data.forecast.slice(0, 4).forEach((day, index) => {
+                    const forecastDate = new Date(today);
+                    forecastDate.setDate(today.getDate() + index + 1);
+                    day.date = forecastDate.toISOString().split("T")[0];
+                });
+            }
+
             this.weatherData = data;
             this.updateDom(1000);
         } catch (error) {
@@ -58,22 +69,23 @@ Module.register("MMM-MyWeatherForecast", {
 
     getBackgroundGradient: function(condition, isForecast=false) {
         const gradients = {
-            "Clear": "linear-gradient(to bottom, #fceabb, #f8b500)",        
-            "Clouds": "linear-gradient(to bottom, #d7d2cc, #304352)",       
-            "Rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",         
-            "Drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",      
-            "Thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)", 
-            "Snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",          
-            "Mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"           
+            "Clear": "linear-gradient(to bottom, #fceabb, #f8b500)",
+            "Clouds": "linear-gradient(to bottom, #d7d2cc, #304352)",
+            "Rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
+            "Drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
+            "Thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)",
+            "Snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
+            "Mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"
         };
 
         let gradient = gradients[condition] || "linear-gradient(to bottom, #fceabb, #f8b500)";
-
-        if (isForecast) {
-            gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
-        }
-
+        if (isForecast) gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
         return gradient;
+    },
+
+    getDayName: function(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString(this.config.lang, { weekday: 'short' });
     },
 
     getDom: function() {
@@ -137,7 +149,7 @@ Module.register("MMM-MyWeatherForecast", {
 
                 const dayName = document.createElement("div");
                 dayName.className = "forecast-day-name";
-                dayName.innerHTML = day.day;
+                dayName.innerHTML = this.getDayName(day.date);
 
                 const dayIcon = document.createElement("img");
                 dayIcon.src = this.getWeatherIcon(day.condition);

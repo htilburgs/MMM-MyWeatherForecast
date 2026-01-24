@@ -36,6 +36,90 @@ Module.register("MMM-MyWeatherForecast", {
         return ["MMM-MyWeatherForecast.css"];
     },
 
+    /* -------------------- ICON & TRANSLATION MAPS -------------------- */
+
+    getIconMaps: function () {
+        return {
+            standard: {
+                "clear-day": "clear.png",
+                "clear-night": "clear-night.png",
+                "partly-cloudy-day": "partly-cloudy.png",
+                "partly-cloudy-night": "partly-cloudy-night.png",
+                "cloudy": "cloudy.png",
+                "rain": "rain.png",
+                "snow": "snow.png",
+                "sleet": "snow.png",
+                "wind": "drizzle.png",
+                "fog": "mist.png",
+                "mist": "mist.png",
+                "thunderstorm": "thunderstorm.png",
+                "drizzle": "drizzle.png"
+            },
+
+            animated: {
+                "clear-day": "clear-day.svg",
+                "clear-night": "clear-night.svg",
+                "partly-cloudy-day": "partly-cloudy-day.svg",
+                "partly-cloudy-night": "partly-cloudy-night.svg",
+                "cloudy": "cloudy.svg",
+                "drizzle": "drizzle.svg",
+                "rain": "rain.svg",
+                "snow": "snow.svg",
+                "thunderstorm": "thunderstorm.svg",
+                "mist": "mist.svg",
+                "fog": "mist.svg",
+                "wind": "drizzle.svg"
+            }
+        };
+    },
+
+    getIconTranslationMap: function () {
+        return {
+            "clear-day": "CLEAR_DAY",
+            "clear-night": "CLEAR_NIGHT",
+            "partly-cloudy-day": "PARTLY_CLOUDY_DAY",
+            "partly-cloudy-night": "PARTLY_CLOUDY_NIGHT",
+            "cloudy": "CLOUDY",
+            "rain": "RAIN",
+            "snow": "SNOW",
+            "sleet": "SLEET",
+            "wind": "WIND",
+            "fog": "FOG",
+            "mist": "MIST",
+            "thunderstorm": "THUNDERSTORM",
+            "drizzle": "DRIZZLE"
+        };
+    },
+
+    getWeatherIcon: function (condition) {
+        const iconSet = this.config.iconSet || "standard";
+        const maps = this.getIconMaps();
+
+        let file = null;
+        let folder = iconSet;
+
+        if (maps[iconSet] && maps[iconSet][condition]) {
+            file = maps[iconSet][condition];
+        } else if (maps.standard[condition]) {
+            file = maps.standard[condition];
+            folder = "standard";
+        } else {
+            file = "clear.png";
+            folder = "standard";
+        }
+
+        return `modules/MMM-MyWeatherForecast/images/${folder}/${file}`;
+    },
+
+    translateModule: function (key) {
+        return this.moduleTranslations[key] || key;
+    },
+
+    getTranslationKey: function (iconName) {
+        const map = this.getIconTranslationMap();
+        return map[iconName] || null;
+    },
+
     /* -------------------- API HELPERS -------------------- */
 
     getApiUnits: function () {
@@ -75,79 +159,10 @@ Module.register("MMM-MyWeatherForecast", {
         }
     },
 
-    /* -------------------- TRANSLATION -------------------- */
-
-    translateModule: function (key) {
-        return this.moduleTranslations[key] || key;
-    },
-
-    /* -------------------- ICON SYSTEM -------------------- */
-
-    getIconMaps: function () {
-        return {
-            standard: {
-                "clear-day": "clear.png",
-                "clear-night": "clear-night.png",
-                "partly-cloudy-day": "partly-cloudy.png",
-                "partly-cloudy-night": "partly-cloudy-night.png",
-                "cloudy": "cloudy.png",
-                "rain": "rain.png",
-                "snow": "snow.png",
-                "sleet": "snow.png",
-                "wind": "drizzle.png",
-                "fog": "mist.png",
-                "mist": "mist.png",
-                "thunderstorm": "thunderstorm.png",
-                "drizzle": "drizzle.png"
-            },
-
-            animated: {
-                "clear-day": "clear-day.svg",
-                "clear-night": "clear-night.svg",
-                "partly-cloudy-day": "partly-cloudy-day.svg",
-                "partly-cloudy-night": "partly-cloudy-night.svg",
-                "cloudy": "cloudy.svg",
-                "drizzle": "drizzle.svg",
-                "rain": "rain.svg",
-                "snow": "snow.svg",
-                "thunderstorm": "thunderstorm.svg",
-                "mist": "mist.svg",
-                "fog": "mist.svg",
-                "wind": "drizzle.svg"
-            }
-        };
-    },
-
-    getWeatherIcon: function (condition) {
-        const iconSet = this.config.iconSet || "standard";
-        const maps = this.getIconMaps();
-
-        let file = null;
-        let folder = iconSet;
-
-        // Try selected icon set first
-        if (maps[iconSet] && maps[iconSet][condition]) {
-            file = maps[iconSet][condition];
-        } 
-        // Fallback to standard set if missing
-        else if (maps.standard[condition]) {
-            file = maps.standard[condition];
-            folder = "standard";
-        } 
-        // Default icon
-        else {
-            file = "clear.png";
-            folder = "standard";
-        }
-
-        return `modules/MMM-MyWeatherForecast/images/${folder}/${file}`;
-    },
-
     /* -------------------- DATE HELPERS -------------------- */
 
     getDayName: function (timestamp) {
         const date = new Date(timestamp * 1000);
-        // Auto-localized weekday short name
         return date.toLocaleDateString(this.config.lang, { weekday: "short" }).toUpperCase();
     },
 
@@ -183,9 +198,10 @@ Module.register("MMM-MyWeatherForecast", {
         const condition = document.createElement("div");
         condition.className = "current-condition";
 
-        // Convert dash-case to underscore uppercase for translation
-        const translationKey = current.icon.replace(/-/g, "_").toUpperCase();
-        condition.innerHTML = this.translateModule(translationKey) || current.summary;
+        const translationKey = this.getTranslationKey(current.icon);
+        condition.innerHTML = translationKey 
+            ? this.translateModule(translationKey) 
+            : current.summary;
 
         details.appendChild(temp);
         details.appendChild(condition);
@@ -238,10 +254,17 @@ Module.register("MMM-MyWeatherForecast", {
 
                 const temp = document.createElement("div");
                 temp.className = "forecast-temp";
+
+                const forecastTranslationKey = this.getTranslationKey(day.icon);
+                const forecastSummary = forecastTranslationKey 
+                    ? this.translateModule(forecastTranslationKey) 
+                    : day.summary;
+
                 temp.innerHTML = `
                     ${day.temperatureMin.toFixed(1)}${this.getTempUnit()}
                     /
                     ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}
+                    <br><small>${forecastSummary}</small>
                 `;
 
                 dayDiv.appendChild(name);

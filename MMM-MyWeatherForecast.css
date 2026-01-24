@@ -41,7 +41,15 @@
 .sun-times {
     font-size: 0.8em;
     margin-top: 4px;
+    text-align: center;        /* center the text */
+    width: 100%;               /* make sure it spans the container */
+    display: block;
 }
+
+.sun-times span {
+    margin: 0 5px; /* small horizontal spacing */
+}
+
 
 /* Forecast bar */
 .forecast-bar {

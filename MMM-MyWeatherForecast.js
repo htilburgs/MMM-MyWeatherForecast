@@ -1,5 +1,3 @@
-import { iconMaps, iconTranslationMap } from "./MMM-MyWeatherForecast-icons.js";
-
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
@@ -15,6 +13,11 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     start() {
+        if (typeof iconMaps === "undefined" || typeof iconTranslationMap === "undefined") {
+            console.error("[MMM-MyWeatherForecast] Icons not loaded!");
+            return;
+        }
+
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
@@ -28,7 +31,6 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     /* -------------------- TRANSLATIONS -------------------- */
-
     async loadTranslations() {
         const lang = this.config.lang || "en";
         try {
@@ -49,7 +51,6 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     /* -------------------- ICONS -------------------- */
-
     getWeatherIcon(condition) {
         const set = iconMaps[this.config.iconSet] || iconMaps.standard;
         const file = set[condition] || iconMaps.standard[condition] || "clear.png";
@@ -58,7 +59,6 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     /* -------------------- API HELPERS -------------------- */
-
     getApiUnits() { return this.config.units === "imperial" ? "us" : "si"; },
     getTempUnit() { return this.config.units === "imperial" ? "°F" : "°C"; },
 
@@ -92,7 +92,6 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     /* -------------------- DOM HELPERS -------------------- */
-
     createDiv(className, innerHTML = "") {
         const div = document.createElement("div");
         div.className = className;
@@ -107,6 +106,7 @@ Module.register("MMM-MyWeatherForecast", {
         return img;
     },
 
+    /* -------------------- BUILD DOM -------------------- */
     getDom() {
         const wrapper = this.createDiv("myweather-wrapper");
 

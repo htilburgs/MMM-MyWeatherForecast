@@ -4,8 +4,8 @@ Module.register("MMM-MyWeatherForecast", {
         apiKey: "",
         latitude: "52.3676",
         longitude: "4.9041",
-        units: "metric", // metric | imperial
-        iconSet: "standard", // standard | outline | animated
+        units: "metric",          // metric | imperial
+        iconSet: "standard",      // standard | animated
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -87,6 +87,7 @@ Module.register("MMM-MyWeatherForecast", {
         return {
             standard: {
                 "clear-day": "clear.png",
+                "clear-night": "clear-night.png",
                 "partly-cloudy-day": "partly-cloudy.png",
                 "partly-cloudy-night": "partly-cloudy-night.png",
                 "cloudy": "cloudy.png",
@@ -95,9 +96,9 @@ Module.register("MMM-MyWeatherForecast", {
                 "sleet": "snow.png",
                 "wind": "drizzle.png",
                 "fog": "mist.png",
+                "mist": "mist.png",
                 "thunderstorm": "thunderstorm.png",
-                "drizzle": "drizzle.png",
-                "mist": "mist.png"
+                "drizzle": "drizzle.png"
             },
 
             animated: {
@@ -110,7 +111,9 @@ Module.register("MMM-MyWeatherForecast", {
                 "rain": "rain.svg",
                 "snow": "snow.svg",
                 "thunderstorm": "thunderstorm.svg",
-                "mist": "mist.svg"
+                "mist": "mist.svg",
+                "fog": "mist.svg",
+                "wind": "drizzle.svg"
             }
         };
     },
@@ -119,21 +122,33 @@ Module.register("MMM-MyWeatherForecast", {
         const iconSet = this.config.iconSet || "standard";
         const maps = this.getIconMaps();
 
-        const setMap = maps[iconSet] || maps.standard;
-        const iconFile =
-            setMap[condition] ||
-            maps.standard[condition] ||
-            "clear.png";
+        let file = null;
+        let folder = iconSet;
 
-        return `modules/MMM-MyWeatherForecast/images/${iconSet}/${iconFile}`;
+        // Try selected icon set first
+        if (maps[iconSet] && maps[iconSet][condition]) {
+            file = maps[iconSet][condition];
+        } 
+        // Fallback to standard set if missing
+        else if (maps.standard[condition]) {
+            file = maps.standard[condition];
+            folder = "standard";
+        } 
+        // Default icon
+        else {
+            file = "clear.png";
+            folder = "standard";
+        }
+
+        return `modules/MMM-MyWeatherForecast/images/${folder}/${file}`;
     },
 
     /* -------------------- DATE HELPERS -------------------- */
 
     getDayName: function (timestamp) {
         const date = new Date(timestamp * 1000);
-        const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-        return this.translateModule(weekdays[date.getDay()]);
+        // Auto-localized weekday short name
+        return date.toLocaleDateString(this.config.lang, { weekday: "short" }).toUpperCase();
     },
 
     /* -------------------- DOM -------------------- */
@@ -167,8 +182,10 @@ Module.register("MMM-MyWeatherForecast", {
 
         const condition = document.createElement("div");
         condition.className = "current-condition";
-        condition.innerHTML =
-            this.translateModule(current.icon.toUpperCase()) || current.summary;
+
+        // Convert dash-case to underscore uppercase for translation
+        const translationKey = current.icon.replace(/-/g, "_").toUpperCase();
+        condition.innerHTML = this.translateModule(translationKey) || current.summary;
 
         details.appendChild(temp);
         details.appendChild(condition);
@@ -177,7 +194,7 @@ Module.register("MMM-MyWeatherForecast", {
         wrapper.appendChild(currentDiv);
 
         /* ---- Sun Times ---- */
-        if (this.config.showSunTimes && forecast?.data?.length) {
+        if (this.config.showSunTimes && forecast?.data?.[0]) {
             const today = forecast.data[0];
             const sunDiv = document.createElement("div");
             sunDiv.className = "sun-times";
@@ -198,7 +215,7 @@ Module.register("MMM-MyWeatherForecast", {
         }
 
         /* ---- Forecast ---- */
-        if (this.config.showForecast && forecast?.data?.length) {
+        if (this.config.showForecast && forecast?.data?.length > 1) {
             const header = document.createElement("div");
             header.className = "forecast-header";
             header.innerHTML = this.translateModule("FORECAST_4_DAYS");

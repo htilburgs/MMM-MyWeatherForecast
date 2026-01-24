@@ -3,19 +3,11 @@ const fetch = require("node-fetch");
 const cors = require("cors");
 
 const app = express();
-const PORT = 8080; // You can change this if needed
+const PORT = 8080;
 
 app.use(cors());
 app.use(express.json());
 
-/**
- * GET /weather
- * Query parameters:
- *  - lat (required)
- *  - lon (required)
- *  - apikey (required)
- *  - lang (optional, default: "en")
- */
 app.get("/weather", async (req, res) => {
     const { lat, lon, apikey, lang = "en" } = req.query;
 
@@ -27,9 +19,7 @@ app.get("/weather", async (req, res) => {
         const url = `https://api.piratesky.com/weather?lat=${lat}&lon=${lon}&apikey=${apikey}&lang=${lang}`;
         const response = await fetch(url);
 
-        if (!response.ok) {
-            return res.status(response.status).json({ error: "PirateSky API error" });
-        }
+        if (!response.ok) return res.status(response.status).json({ error: "PirateSky API error" });
 
         const data = await response.json();
         res.json(data);

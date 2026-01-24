@@ -11,16 +11,13 @@ Module.register("MMM-MyWeatherForecast", {
         lang: "en" // Module-specific language
     },
 
-    // --- Add language property at module registration ---
-    language: null,  // MagicMirror will use this
+    // --- Set language immediately from defaults to override global MagicMirror language ---
+    language: null,
 
     start: function() {
+        this.language = this.config.lang;  // Module-specific language
         this.weatherData = null;
         this.lastUpdate = null;
-
-        // Force module to use its own language BEFORE any translate() call
-        this.language = this.config.lang;
-
         this.scheduleUpdate();
     },
 
@@ -126,7 +123,6 @@ Module.register("MMM-MyWeatherForecast", {
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
-
         const iconKey = current.icon.toUpperCase();
         const translatedCondition = this.translate(iconKey);
         conditionText.innerHTML = translatedCondition !== iconKey ? translatedCondition : current.summary;

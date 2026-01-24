@@ -3,7 +3,7 @@ Module.register("MMM-MyWeatherForecast", {
         apiKey: "",
         userlat: "52.3676",
         userlon: "4.9041",
-        units: "si",
+        units: "metric", // "metric" or "imperial"
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -33,6 +33,16 @@ Module.register("MMM-MyWeatherForecast", {
         return ["MMM-MyWeatherForecast.css"];
     },
 
+    // --- Map module units to API units ---
+    getApiUnits: function() {
+        return this.config.units === "imperial" ? "us" : "si";
+    },
+
+    // --- Get temperature unit symbol ---
+    getTempUnit: function() {
+        return this.config.units === "imperial" ? "°F" : "°C";
+    },
+
     scheduleUpdate: function() {
         setInterval(() => this.fetchWeather(), this.config.updateInterval);
         this.fetchWeather();
@@ -43,7 +53,7 @@ Module.register("MMM-MyWeatherForecast", {
             apiKey: this.config.apiKey,
             userlat: this.config.userlat,
             userlon: this.config.userlon,
-            units: this.config.units,
+            units: this.getApiUnits(),
             lang: this.config.lang
         });
     },
@@ -69,7 +79,7 @@ Module.register("MMM-MyWeatherForecast", {
         }
     },
 
-    // --- Manual translation function ---
+    // --- Manual translation ---
     translateModule: function(key) {
         return (this.moduleTranslations && this.moduleTranslations[key]) || key;
     },
@@ -79,7 +89,7 @@ Module.register("MMM-MyWeatherForecast", {
             "clear-day": "clear.png",
             "clear-night": "clear.png",
             "partly-cloudy-day": "partly-cloudy.png",
-            "partly-cloudy-night": "cloudy.png",
+            "partly-cloudy-night": "partly-cloudy-night.png",
             "cloudy": "cloudy.png",
             "rain": "rain.png",
             "snow": "snow.png",
@@ -105,8 +115,9 @@ Module.register("MMM-MyWeatherForecast", {
         const wrapper = document.createElement("div");
         wrapper.className = "myweather-wrapper";
 
-        if (!this.weatherData) {
-            wrapper.innerHTML = this.translateModule("LOADING");
+        // --- Safe loading check ---
+        if (!this.weatherData || !this.moduleTranslations || Object.keys(this.moduleTranslations).length === 0) {
+            wrapper.innerHTML = this.translateModule("LOADING") || "Loading...";
             return wrapper;
         }
 
@@ -126,7 +137,7 @@ Module.register("MMM-MyWeatherForecast", {
 
         const temp = document.createElement("div");
         temp.className = "current-temp";
-        temp.innerHTML = `${current.temperature.toFixed(1)}°`;
+        temp.innerHTML = `${current.temperature.toFixed(1)}${this.getTempUnit()}`;
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
@@ -150,8 +161,15 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(sun);
         }
 
-        // --- Forecast ---
+        // --- Forecast header + 4-day forecast ---
         if (this.config.showForecast && forecast && forecast.data) {
+            // Forecast header (translated)
+            const forecastHeader = document.createElement("div");
+            forecastHeader.className = "forecast-header";
+            forecastHeader.innerHTML = this.translateModule("FORECAST_4_DAYS");
+            wrapper.appendChild(forecastHeader);
+
+            // Forecast bar
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
 
@@ -169,7 +187,7 @@ Module.register("MMM-MyWeatherForecast", {
 
                 const dayTemp = document.createElement("div");
                 dayTemp.className = "forecast-temp";
-                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}° / ${day.temperatureMax.toFixed(1)}°`;
+                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}`;
 
                 dayDiv.appendChild(dayName);
                 dayDiv.appendChild(dayIcon);

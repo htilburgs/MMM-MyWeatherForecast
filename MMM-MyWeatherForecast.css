@@ -53,6 +53,16 @@
     margin: 0 5px;
 }
 
+/* Forecast Header */
+.forecast-header {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+    color: lightblue;
+}
+
 /* Forecast bar */
 .forecast-bar {
     display: flex;
@@ -87,9 +97,16 @@
 
 /* Day name styling */
 .forecast-day-name {
-    font-size: 0.7em;
+    font-size: 0.5em;
     margin-top: 6px; /* spacing under icon */
     margin-bottom: 2px;
+}
+
+/* Temperature styling */
+.forecast-temp {
+    font-size: 0.55em;
+    margin-top: 2px;
+    text-align: center;
 }
 
 /* Forecast icon */
@@ -98,16 +115,9 @@
     height: 48px;
 }
 
-/* Temperature styling */
-.forecast-temp {
-    font-size: 0.75em;
-    margin-top: 2px;
-    text-align: center;
-}
-
 /* Last update */
 .last-update {
-    font-size: 0.7em;
+    font-size: 0.6em;
     color: #ccc;
     margin-top: 5px;
     text-align: right;   /* align right */

@@ -1,8 +1,9 @@
-{
+  {
   "LOADING": "Laden...",
   "SUNRISE": "Zonsopgang",
   "SUNSET": "Zonsondergang",
   "LAST_UPDATE": "Laatste update",
+  "FORECAST_4_DAYS": "4 Daagse voorspelling",
   "CLEAR-DAY": "Helder",
   "CLEAR-NIGHT": "Helder Nacht",
   "PARTLY-CLOUDY-DAY": "Half Bewolkt",
@@ -24,3 +25,5 @@
   "SAT": "Za",
   "SUN": "Zo"
 }
+
+

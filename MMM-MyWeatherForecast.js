@@ -4,8 +4,8 @@ Module.register("MMM-MyWeatherForecast", {
         apiKey: "",
         latitude: "52.3676",
         longitude: "4.9041",
-        units: "metric",          // metric | imperial
-        iconSet: "standard",      // standard | animated
+        units: "metric",          
+        iconSet: "standard",      
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -35,8 +35,6 @@ Module.register("MMM-MyWeatherForecast", {
     getStyles: function () {
         return ["MMM-MyWeatherForecast.css"];
     },
-
-    /* -------------------- ICON & TRANSLATION MAPS -------------------- */
 
     getIconMaps: function () {
         return {
@@ -120,8 +118,6 @@ Module.register("MMM-MyWeatherForecast", {
         return map[iconName] || null;
     },
 
-    /* -------------------- API HELPERS -------------------- */
-
     getApiUnits: function () {
         return this.config.units === "imperial" ? "us" : "si";
     },
@@ -159,14 +155,10 @@ Module.register("MMM-MyWeatherForecast", {
         }
     },
 
-    /* -------------------- DATE HELPERS -------------------- */
-
     getDayName: function (timestamp) {
         const date = new Date(timestamp * 1000);
         return date.toLocaleDateString(this.config.lang, { weekday: "short" }).toUpperCase();
     },
-
-    /* -------------------- DOM -------------------- */
 
     getDom: function () {
         const wrapper = document.createElement("div");
@@ -244,36 +236,24 @@ Module.register("MMM-MyWeatherForecast", {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
 
-                // Day name
                 const name = document.createElement("div");
                 name.className = "forecast-day-name";
                 name.innerHTML = this.getDayName(day.time);
 
-                // Icon
                 const icon = document.createElement("img");
                 icon.className = "forecast-icon";
                 icon.src = this.getWeatherIcon(day.icon);
 
-                // Temp
                 const temp = document.createElement("div");
                 temp.className = "forecast-temp";
                 temp.innerHTML = `
-                    ${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / 
+                    ${day.temperatureMin.toFixed(1)}${this.getTempUnit()} /
                     ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}
                 `;
-
-                // Translated summary
-                const summaryDiv = document.createElement("div");
-                summaryDiv.className = "forecast-summary";
-                const summaryKey = this.getTranslationKey(day.icon);
-                summaryDiv.innerHTML = summaryKey 
-                    ? this.translateModule(summaryKey) 
-                    : day.summary;
 
                 dayDiv.appendChild(name);
                 dayDiv.appendChild(icon);
                 dayDiv.appendChild(temp);
-                dayDiv.appendChild(summaryDiv);
                 bar.appendChild(dayDiv);
             });
 

@@ -16,7 +16,7 @@ Module.register("MMM-MyWeatherForecast", {
         this.lastUpdate = null;
         this.moduleTranslations = {};
 
-        // --- Manually load the translation JSON ---
+        // --- Load translation JSON manually ---
         const lang = this.config.lang || "en";
         fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`)
             .then(res => res.json())
@@ -93,9 +93,12 @@ Module.register("MMM-MyWeatherForecast", {
         return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
+    // --- Translated weekday names ---
     getDayName: function(dateString) {
         const date = new Date(dateString);
-        return date.toLocaleDateString(this.config.lang, { weekday: 'short' });
+        const weekdayIndex = date.getDay(); // 0 = Sunday
+        const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+        return this.translateModule(weekdays[weekdayIndex]);
     },
 
     getDom: function() {

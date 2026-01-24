@@ -8,5 +8,6 @@
     "SNOW": "Schnee",
     "THUNDERSTORM": "Gewitter",
     "DRIZZLE": "Nieselregen",
-    "MIST": "Nebel"
+    "MIST": "Nebel",
+    "LAST_UPDATE": "Letztes Update"
 }

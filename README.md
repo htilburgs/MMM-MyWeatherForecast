@@ -48,7 +48,7 @@ Add the module to your modules array in your config.js.
 },
 ```
 
-* To get your latitude and longitude, you can go to https://latitudelongitude.org
+* To get your latitude and longitude, you can go to https://www.latlong.net/
 * To get your Pirate Weather API key, you can go to https://pirateweather.net/en/latest/
 
 ## Versions

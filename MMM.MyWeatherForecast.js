@@ -4,7 +4,7 @@ Module.register("MMM-MyWeatherForecast", {
         latitude: "52.3676",
         longitude: "4.9041",
         showForecast: true,
-        updateInterval: 10 * 60 * 1000, // 10 minutes
+        updateInterval: 10 * 60 * 1000,
         lang: config.language || "en"
     },
 
@@ -32,7 +32,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather: async function() {
-        const url = `https://api.piratesky.com/weather?lat=${this.config.latitude}&lon=${this.config.longitude}&apikey=${this.config.apiKey}&lang=${this.config.lang}`;
+        const url = `http://localhost:8080/weather?lat=${this.config.latitude}&lon=${this.config.longitude}&apikey=${this.config.apiKey}&lang=${this.config.lang}`;
         try {
             const response = await fetch(url);
             const data = await response.json();
@@ -56,6 +56,26 @@ Module.register("MMM-MyWeatherForecast", {
         return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
+    getBackgroundGradient: function(condition, isForecast=false) {
+        const gradients = {
+            "Clear": "linear-gradient(to bottom, #fceabb, #f8b500)",        
+            "Clouds": "linear-gradient(to bottom, #d7d2cc, #304352)",       
+            "Rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",         
+            "Drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",      
+            "Thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)", 
+            "Snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",          
+            "Mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"           
+        };
+
+        let gradient = gradients[condition] || "linear-gradient(to bottom, #fceabb, #f8b500)";
+
+        if (isForecast) {
+            gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
+        }
+
+        return gradient;
+    },
+
     getDom: function() {
         const wrapper = document.createElement("div");
         wrapper.className = "myweather-wrapper";
@@ -68,7 +88,13 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.current;
         const forecast = this.weatherData.forecast;
 
-        // --- Current Weather ---
+        // Main background
+        wrapper.style.background = this.getBackgroundGradient(current.condition);
+        wrapper.style.borderRadius = "15px";
+        wrapper.style.padding = "15px";
+        wrapper.style.color = "#fff";
+
+        // Current weather
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
 
@@ -97,10 +123,9 @@ Module.register("MMM-MyWeatherForecast", {
 
         currentDiv.appendChild(icon);
         currentDiv.appendChild(details);
-
         wrapper.appendChild(currentDiv);
 
-        // --- Forecast Bar ---
+        // Forecast
         if (this.config.showForecast && forecast) {
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
@@ -108,6 +133,7 @@ Module.register("MMM-MyWeatherForecast", {
             forecast.slice(0, 4).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
+                dayDiv.style.background = this.getBackgroundGradient(day.condition, true);
 
                 const dayName = document.createElement("div");
                 dayName.className = "forecast-day-name";

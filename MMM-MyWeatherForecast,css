@@ -1,0 +1,39 @@
+.current-weather {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: sans-serif;
+}
+
+.weather-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.temperature {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.condition, .sunrise, .sunset {
+    display: block;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.forecast-day {
+    text-align: center;
+}
+
+.weather-icon-small {
+    width: 40px;
+    height: 40px;
+}
+
+.temperature-small {
+    display: block;
+}

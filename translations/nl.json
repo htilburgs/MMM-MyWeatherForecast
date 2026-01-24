@@ -8,5 +8,6 @@
     "SNOW": "Sneeuw",
     "THUNDERSTORM": "Onweer",
     "DRIZZLE": "Motregen",
-    "MIST": "Mist"
+    "MIST": "Mist",
+    "LAST_UPDATE": "Laatste update"
 }

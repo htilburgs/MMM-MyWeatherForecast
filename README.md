@@ -1,5 +1,6 @@
 # MMM-MyWeatherForecast
-This a MagicMirror² module for weather information and an optional 4-day forecast. </br></br>
+This is a MagicMirror² module for weather information and an optional 4-day forecast.</br>
+It only uses the weather information from PirateWeather with a free API.</br></br>
 
 <img width="415" height="335" alt="image" src="https://github.com/user-attachments/assets/b9444dd3-bb8b-4096-b54d-95042e56efd1" />
 
@@ -47,7 +48,8 @@ Add the module to your modules array in your config.js.
 },
 ```
 
-To get your latitude and longitude, you can go to https://latitudelongitude.org
+* To get your latitude and longitude, you can go to https://latitudelongitude.org
+* To get your Pirate Weather API key, you can go to https://pirateweather.net/en/latest/
 
 ## Versions
 v1.0.0  - Initial release </br>

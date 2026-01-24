@@ -1,10 +1,12 @@
+/* MMM-MyWeatherForecast.js */
+
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
         latitude: "52.3676",
         longitude: "4.9041",
         units: "metric",
-        iconSet: "standard",
+        iconSet: "standard", // standard | animated
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -12,12 +14,56 @@ Module.register("MMM-MyWeatherForecast", {
         lang: "en"
     },
 
-    start() {
-        if (typeof iconMaps === "undefined" || typeof iconTranslationMap === "undefined") {
-            console.error("[MMM-MyWeatherForecast] Icons not loaded!");
-            return;
+    /* -------------------- ICONS -------------------- */
+    iconMaps: {
+        standard: {
+            "clear-day": "clear.png",
+            "clear-night": "clear-night.png",
+            "partly-cloudy-day": "partly-cloudy.png",
+            "partly-cloudy-night": "partly-cloudy-night.png",
+            "cloudy": "cloudy.png",
+            "rain": "rain.png",
+            "snow": "snow.png",
+            "sleet": "snow.png",
+            "wind": "drizzle.png",
+            "fog": "mist.png",
+            "mist": "mist.png",
+            "thunderstorm": "thunderstorm.png",
+            "drizzle": "drizzle.png"
+        },
+        animated: {
+            "clear-day": "clear-day.svg",
+            "clear-night": "clear-night.svg",
+            "partly-cloudy-day": "partly-cloudy-day.svg",
+            "partly-cloudy-night": "partly-cloudy-night.svg",
+            "cloudy": "cloudy.svg",
+            "rain": "rain.svg",
+            "snow": "snow.svg",
+            "thunderstorm": "thunderstorm.svg",
+            "mist": "mist.svg",
+            "fog": "mist.svg",
+            "drizzle": "drizzle.svg",
+            "wind": "drizzle.svg"
         }
+    },
 
+    iconTranslationMap: {
+        "clear-day": "CLEAR_DAY",
+        "clear-night": "CLEAR_NIGHT",
+        "partly-cloudy-day": "PARTLY_CLOUDY_DAY",
+        "partly-cloudy-night": "PARTLY_CLOUDY_NIGHT",
+        "cloudy": "CLOUDY",
+        "rain": "RAIN",
+        "snow": "SNOW",
+        "sleet": "SLEET",
+        "wind": "WIND",
+        "fog": "FOG",
+        "mist": "MIST",
+        "thunderstorm": "THUNDERSTORM",
+        "drizzle": "DRIZZLE"
+    },
+
+    start() {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
@@ -31,15 +77,22 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     /* -------------------- TRANSLATIONS -------------------- */
-    async loadTranslations() {
+    loadTranslations() {
         const lang = this.config.lang || "en";
-        try {
-            const res = await fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`);
-            this.moduleTranslations = await res.json();
-            this.updateDom();
-        } catch (err) {
-            console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
-        }
+        fetch(this.file(`translations/${lang}.json`))
+            .then(res => {
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return res.json();
+            })
+            .then(json => {
+                this.moduleTranslations = json;
+                this.updateDom();
+            })
+            .catch(err => {
+                console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
+                this.moduleTranslations = {}; 
+                this.updateDom(); // ensures module continues
+            });
     },
 
     translate(key) {
@@ -47,13 +100,13 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return iconTranslationMap[icon] || null;
+        return this.iconTranslationMap[icon] || null;
     },
 
     /* -------------------- ICONS -------------------- */
     getWeatherIcon(condition) {
-        const set = iconMaps[this.config.iconSet] || iconMaps.standard;
-        const file = set[condition] || iconMaps.standard[condition] || "clear.png";
+        const set = this.iconMaps[this.config.iconSet] || this.iconMaps.standard;
+        const file = set[condition] || this.iconMaps.standard[condition] || "clear.png";
         const folder = set[condition] ? this.config.iconSet : "standard";
         return `modules/MMM-MyWeatherForecast/images/${folder}/${file}`;
     },
@@ -106,7 +159,6 @@ Module.register("MMM-MyWeatherForecast", {
         return img;
     },
 
-    /* -------------------- BUILD DOM -------------------- */
     getDom() {
         const wrapper = this.createDiv("myweather-wrapper");
 

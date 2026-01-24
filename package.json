@@ -6,5 +6,7 @@
   "scripts": {},
   "author": "H. Tilburgs",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }

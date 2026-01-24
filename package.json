@@ -1,0 +1,11 @@
+{
+  "name": "MMM-MyWeatherForecast",
+  "version": "1.0.0",
+  "description": "Weather forecast from PirateSky API for MagicMirror²",
+  "main": "MMM-MyWeatherForecast.js",
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

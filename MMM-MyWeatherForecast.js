@@ -90,27 +90,6 @@ Module.register("MMM-MyWeatherForecast", {
         return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
-    getBackgroundGradient: function(condition, isForecast=false) {
-        const gradients = {
-            "clear-day": "linear-gradient(to bottom, #fceabb, #f8b500)",
-            "clear-night": "linear-gradient(to bottom, #2c3e50, #4ca1af)",
-            "partly-cloudy-day": "linear-gradient(to bottom, #d7d2cc, #304352)",
-            "partly-cloudy-night": "linear-gradient(to bottom, #2c3e50, #4ca1af)",
-            "cloudy": "linear-gradient(to bottom, #d7d2cc, #304352)",
-            "rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
-            "sleet": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
-            "wind": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "fog": "linear-gradient(to bottom, #757f9a, #d7dde8)",
-            "thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)",
-            "drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"
-        };
-        let gradient = gradients[condition] || "linear-gradient(to bottom, #fceabb, #f8b500)";
-        if (isForecast) gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
-        return gradient;
-    },
-
     getDayName: function(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString(this.config.lang, { weekday: 'short' });
@@ -128,7 +107,6 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.currently;
         const forecast = this.weatherData.daily;
 
-        wrapper.style.background = this.getBackgroundGradient(current.icon);
         wrapper.style.borderRadius = "15px";
         wrapper.style.padding = "15px";
         wrapper.style.color = "#fff";
@@ -177,7 +155,7 @@ Module.register("MMM-MyWeatherForecast", {
             forecast.data.slice(1,5).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
-                dayDiv.style.background = this.getBackgroundGradient(day.icon, true);
+                // No background colors
 
                 const dayName = document.createElement("div");
                 dayName.className = "forecast-day-name";

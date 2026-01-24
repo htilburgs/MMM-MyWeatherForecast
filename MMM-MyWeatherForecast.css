@@ -10,7 +10,7 @@
     align-items: center; /* center the module content */
 }
 
-/* Current weather section */
+/* Current weather section: icon left, text right */
 .current-weather {
     display: flex;
     flex-direction: row;      /* icon on left, details on right */
@@ -40,17 +40,17 @@
     margin-top: 2px;
 }
 
-/* Sunrise / Sunset text */
+/* Sunrise / Sunset text with empty line above */
 .sun-times {
     font-size: 0.8em;
-    margin-top: 4px;
+    margin-top: 12px;         /* creates empty line above sunrise/sunset */
     text-align: center;       /* centered under the weather */
     width: 100%;
     display: block;
 }
 
 .sun-times span {
-    margin: 0 5px;
+    margin: 0 5px;            /* spacing between sunrise and sunset */
 }
 
 /* Forecast bar */

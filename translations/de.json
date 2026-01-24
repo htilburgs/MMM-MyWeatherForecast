@@ -2,12 +2,18 @@
     "LOADING": "Wetter wird geladen...",
     "SUNRISE": "Sonnenaufgang",
     "SUNSET": "Sonnenuntergang",
-    "CLEAR": "Klar",
-    "CLOUDS": "Bewölkt",
+    "LAST_UPDATE": "Letztes Update",
+    "CLEAR-DAY": "Sonnig",
+    "CLEAR-NIGHT": "Klar",
+    "PARTLY-CLOUDY-DAY": "Teilweise bewölkt",
+    "PARTLY-CLOUDY-NIGHT": "Teilweise bewölkt",
+    "CLOUDY": "Bewölkt",
     "RAIN": "Regen",
     "SNOW": "Schnee",
+    "SLEET": "Schneeregen",
+    "WIND": "Windig",
+    "FOG": "Nebel",
     "THUNDERSTORM": "Gewitter",
     "DRIZZLE": "Nieselregen",
-    "MIST": "Nebel",
-    "LAST_UPDATE": "Letztes Update"
+    "MIST": "Nebel"
 }

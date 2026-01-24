@@ -100,18 +100,6 @@ Module.register("MMM-MyWeatherForecast", {
                 "mist": "mist.png"
             },
 
-            outline: {
-                "clear-day": "sun-outline.png",
-                "clear-night": "moon-outline.png",
-                "partly-cloudy-day": "cloud-sun-outline.png",
-                "partly-cloudy-night": "cloud-moon-outline.png",
-                "cloudy": "cloud-outline.png",
-                "rain": "rain-outline.png",
-                "snow": "snow-outline.png",
-                "thunderstorm": "storm-outline.png",
-                "fog": "fog-outline.png"
-            },
-
             animated: {
                 "clear-day": "clear-day.svg",
                 "clear-night": "clear-night.svg",
@@ -121,8 +109,8 @@ Module.register("MMM-MyWeatherForecast", {
                 "drizzle": "drizzle.svg",
                 "rain": "rain.svg",
                 "snow": "snow.svg",
-                "mist": "mist.svg",
-                "thunderstorm": "thunderstorm.svg"
+                "thunderstorm": "thunderstorm.svg",
+                "mist": "mist.svg"
             }
         };
     },

@@ -3,7 +3,7 @@ Module.register("MMM-MyWeatherForecast", {
         apiKey: "",
         userlat: "52.3676",
         userlon: "4.9041",
-        units: "si",
+        units: "metric", // "metric" or "imperial"
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -33,6 +33,11 @@ Module.register("MMM-MyWeatherForecast", {
         return ["MMM-MyWeatherForecast.css"];
     },
 
+    // --- Map module units to API units ---
+    getApiUnits: function() {
+        return this.config.units === "imperial" ? "us" : "si";
+    },
+
     scheduleUpdate: function() {
         setInterval(() => this.fetchWeather(), this.config.updateInterval);
         this.fetchWeather();
@@ -43,7 +48,7 @@ Module.register("MMM-MyWeatherForecast", {
             apiKey: this.config.apiKey,
             userlat: this.config.userlat,
             userlon: this.config.userlon,
-            units: this.config.units,
+            units: this.getApiUnits(),  // <- uses metric/imperial mapping
             lang: this.config.lang
         });
     },
@@ -156,7 +161,7 @@ Module.register("MMM-MyWeatherForecast", {
             // Forecast header (translated)
             const forecastHeader = document.createElement("div");
             forecastHeader.className = "forecast-header";
-            forecastHeader.innerHTML = this.translateModule("FORECAST");
+            forecastHeader.innerHTML = this.translateModule("FORECAST_4_DAYS");
             wrapper.appendChild(forecastHeader);
 
             // Forecast bar

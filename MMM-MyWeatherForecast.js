@@ -110,7 +110,7 @@ Module.register("MMM-MyWeatherForecast", {
                 "rain": "rain.svg",
                 "snow": "snow.svg",
                 "thunderstorm": "thunderstorm.svg",
-                "mist": "fog.svg"
+                "mist": "mist.svg"
             }
         };
     },

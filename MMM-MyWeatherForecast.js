@@ -1,8 +1,8 @@
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
-        userlat: "52.3676",
-        userlon: "4.9041",
+        latitude: "52.3676",   
+        longitude: "4.9041",   
         units: "metric", // "metric" or "imperial"
         showForecast: true,
         showLastUpdate: true,
@@ -51,8 +51,8 @@ Module.register("MMM-MyWeatherForecast", {
     fetchWeather: function() {
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,
-            userlat: this.config.userlat,
-            userlon: this.config.userlon,
+            userlat: this.config.latitude,   // API still expects userlat
+            userlon: this.config.longitude,  // API still expects userlon
             units: this.getApiUnits(),
             lang: this.config.lang
         });
@@ -163,13 +163,11 @@ Module.register("MMM-MyWeatherForecast", {
 
         // --- Forecast header + 4-day forecast ---
         if (this.config.showForecast && forecast && forecast.data) {
-            // Forecast header (translated)
             const forecastHeader = document.createElement("div");
             forecastHeader.className = "forecast-header";
             forecastHeader.innerHTML = this.translateModule("FORECAST_4_DAYS");
             wrapper.appendChild(forecastHeader);
 
-            // Forecast bar
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
 

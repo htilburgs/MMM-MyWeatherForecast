@@ -117,7 +117,7 @@ Module.register("MMM-MyWeatherForecast", {
 
         const temp = document.createElement("div");
         temp.className = "current-temp";
-        temp.innerHTML = `${current.temperature}°`;
+        temp.innerHTML = `${current.temperature.toFixed(1)}°`;
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
@@ -160,7 +160,7 @@ Module.register("MMM-MyWeatherForecast", {
 
                 const dayTemp = document.createElement("div");
                 dayTemp.className = "forecast-temp";
-                dayTemp.innerHTML = `${day.temperatureMin}° / ${day.temperatureMax}°`;
+                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}° / ${day.temperatureMax.toFixed(1)}°`;
 
                 dayDiv.appendChild(dayName);
                 dayDiv.appendChild(dayIcon);

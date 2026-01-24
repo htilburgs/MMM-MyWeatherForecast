@@ -244,32 +244,36 @@ Module.register("MMM-MyWeatherForecast", {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
 
+                // Day name
                 const name = document.createElement("div");
                 name.className = "forecast-day-name";
                 name.innerHTML = this.getDayName(day.time);
 
+                // Icon
                 const icon = document.createElement("img");
                 icon.className = "forecast-icon";
                 icon.src = this.getWeatherIcon(day.icon);
 
+                // Temp
                 const temp = document.createElement("div");
                 temp.className = "forecast-temp";
-
-                const forecastTranslationKey = this.getTranslationKey(day.icon);
-                const forecastSummary = forecastTranslationKey 
-                    ? this.translateModule(forecastTranslationKey) 
-                    : day.summary;
-
                 temp.innerHTML = `
-                    ${day.temperatureMin.toFixed(1)}${this.getTempUnit()}
-                    /
+                    ${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / 
                     ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}
-                    <br><small>${forecastSummary}</small>
                 `;
+
+                // Translated summary
+                const summaryDiv = document.createElement("div");
+                summaryDiv.className = "forecast-summary";
+                const summaryKey = this.getTranslationKey(day.icon);
+                summaryDiv.innerHTML = summaryKey 
+                    ? this.translateModule(summaryKey) 
+                    : day.summary;
 
                 dayDiv.appendChild(name);
                 dayDiv.appendChild(icon);
                 dayDiv.appendChild(temp);
+                dayDiv.appendChild(summaryDiv);
                 bar.appendChild(dayDiv);
             });
 

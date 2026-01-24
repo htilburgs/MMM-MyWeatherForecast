@@ -1,0 +1,12 @@
+{
+    "LOADING": "Loading weather...",
+    "SUNRISE": "Sunrise",
+    "SUNSET": "Sunset",
+    "CLEAR": "Clear",
+    "CLOUDS": "Cloudy",
+    "RAIN": "Rain",
+    "SNOW": "Snow",
+    "THUNDERSTORM": "Thunderstorm",
+    "DRIZZLE": "Drizzle",
+    "MIST": "Mist"
+}

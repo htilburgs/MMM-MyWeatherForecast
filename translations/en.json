@@ -8,5 +8,6 @@
     "SNOW": "Snow",
     "THUNDERSTORM": "Thunderstorm",
     "DRIZZLE": "Drizzle",
-    "MIST": "Mist"
+    "MIST": "Mist",
+    "LAST_UPDATE": "Last update"
 }

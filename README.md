@@ -42,8 +42,8 @@ Add the module to your modules array in your config.js.
                 showForecast: true,             // Show 4 day forecast
                 showLastUpdate: true,           // Show when the data is last updated
                 showSunTimes: true,             // Show Sun up and Sun Down information 
-                lang: "en",                     // Select language nl, de, en, fr
-                iconSet: "standard",            // standard | animated | flat
+                lang: "en",                     // Select language nl, de, en,  fr
+                iconSet: "standard",            // standard | animated
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
                 }    
 },
@@ -53,6 +53,6 @@ Add the module to your modules array in your config.js.
 * To get your Pirate Weather API key, you can go to https://pirateweather.net/en/latest/
 
 ## Versions
-v1.0.0  - Initial release </br>
-v1.1.0  - Code and CSS optimize </br>
-v1.2.0  - Add Iconsets
+v1.0.0        : Initial release </br>
+v1.1.0        : Code and CSS optimize </br>
+v1.2.0        : Add Iconsets

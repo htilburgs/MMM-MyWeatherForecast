@@ -38,6 +38,11 @@ Module.register("MMM-MyWeatherForecast", {
         return this.config.units === "imperial" ? "us" : "si";
     },
 
+    // --- Get temperature unit symbol ---
+    getTempUnit: function() {
+        return this.config.units === "imperial" ? "°F" : "°C";
+    },
+
     scheduleUpdate: function() {
         setInterval(() => this.fetchWeather(), this.config.updateInterval);
         this.fetchWeather();
@@ -48,7 +53,7 @@ Module.register("MMM-MyWeatherForecast", {
             apiKey: this.config.apiKey,
             userlat: this.config.userlat,
             userlon: this.config.userlon,
-            units: this.getApiUnits(),  // <- uses metric/imperial mapping
+            units: this.getApiUnits(),
             lang: this.config.lang
         });
     },
@@ -132,7 +137,7 @@ Module.register("MMM-MyWeatherForecast", {
 
         const temp = document.createElement("div");
         temp.className = "current-temp";
-        temp.innerHTML = `${current.temperature.toFixed(1)}°`;
+        temp.innerHTML = `${current.temperature.toFixed(1)}${this.getTempUnit()}`;
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
@@ -182,7 +187,7 @@ Module.register("MMM-MyWeatherForecast", {
 
                 const dayTemp = document.createElement("div");
                 dayTemp.className = "forecast-temp";
-                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}° / ${day.temperatureMax.toFixed(1)}°`;
+                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}`;
 
                 dayDiv.appendChild(dayName);
                 dayDiv.appendChild(dayIcon);

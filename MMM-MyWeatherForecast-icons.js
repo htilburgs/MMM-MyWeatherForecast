@@ -1,5 +1,5 @@
-// MMM-MyWeatherForecast-icons.js
-export const iconMaps = {
+/* MMM-MyWeatherForecast-icons.js */
+var iconMaps = {
     standard: {
         "clear-day": "clear.png",
         "clear-night": "clear-night.png",
@@ -31,7 +31,7 @@ export const iconMaps = {
     }
 };
 
-export const iconTranslationMap = {
+var iconTranslationMap = {
     "clear-day": "CLEAR_DAY",
     "clear-night": "CLEAR_NIGHT",
     "partly-cloudy-day": "PARTLY_CLOUDY_DAY",

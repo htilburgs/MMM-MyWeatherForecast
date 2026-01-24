@@ -10,7 +10,7 @@ module.exports = NodeHelper.create({
         if (notification === "FETCH_WEATHER") {
             const { apiKey, userlat, userlon, units, lang } = payload;
             const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${lang}`;
-            console.log("[MMM-MyWeatherForecast] Fetching URL:", url);
+            // console.log("[MMM-MyWeatherForecast] Fetching URL:", url);  // Remove trailing slashes only for testing
 
             try {
                 const response = await fetch(url);

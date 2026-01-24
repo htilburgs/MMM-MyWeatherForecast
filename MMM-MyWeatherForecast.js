@@ -3,7 +3,7 @@ Module.register("MMM-MyWeatherForecast", {
         apiKey: "",
         userlat: "52.3676",
         userlon: "4.9041",
-        units: "si",               // "si" = metric, "us" = imperial
+        units: "si",
         showForecast: true,
         updateInterval: 10 * 60 * 1000,
         lang: config.language || "en",
@@ -46,11 +46,16 @@ Module.register("MMM-MyWeatherForecast", {
 
     socketNotificationReceived: function(notification, payload) {
         if (notification === "WEATHER_RESULT") {
+            if (!payload || !payload.currently || !payload.daily) {
+                console.error("[MMM-MyWeatherForecast] Invalid weather data:", payload);
+                return;
+            }
+
             const today = new Date();
 
-            if (payload.daily) {
-                // Store next 4 days for forecast
-                payload.daily.slice(1, 5).forEach((day, index) => {
+            // Prepare next 4 days forecast
+            if (payload.daily.data) {
+                payload.daily.data.slice(1,5).forEach((day, index) => {
                     const forecastDate = new Date(today);
                     forecastDate.setDate(today.getDate() + index + 1);
                     day.date = forecastDate.toISOString().split("T")[0];
@@ -62,7 +67,7 @@ Module.register("MMM-MyWeatherForecast", {
             this.updateDom(1000);
 
         } else if (notification === "WEATHER_ERROR") {
-            console.error("MMM-MyWeatherForecast Error:", payload);
+            console.error("[MMM-MyWeatherForecast] WEATHER_ERROR:", payload);
         }
     },
 
@@ -93,8 +98,8 @@ Module.register("MMM-MyWeatherForecast", {
             "partly-cloudy-night": "linear-gradient(to bottom, #2c3e50, #4ca1af)",
             "cloudy": "linear-gradient(to bottom, #d7d2cc, #304352)",
             "rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "sleet": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
             "snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
+            "sleet": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
             "wind": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
             "fog": "linear-gradient(to bottom, #757f9a, #d7dde8)",
             "thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)",
@@ -149,7 +154,7 @@ Module.register("MMM-MyWeatherForecast", {
 
         const sun = document.createElement("div");
         sun.className = "sun-times";
-        if (this.weatherData.daily && this.weatherData.daily.data) {
+        if (this.weatherData.daily.data) {
             const todayData = this.weatherData.daily.data[0];
             const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -165,7 +170,7 @@ Module.register("MMM-MyWeatherForecast", {
         wrapper.appendChild(currentDiv);
 
         // Forecast
-        if (this.config.showForecast && forecast) {
+        if (this.config.showForecast && forecast && forecast.data) {
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
 

@@ -7,27 +7,27 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center everything horizontally */
+    align-items: center; /* center the module content */
 }
 
 /* Current weather section */
 .current-weather {
     display: flex;
-    flex-direction: column;   /* icon above text */
-    align-items: center;      /* center horizontally */
+    flex-direction: row;      /* icon on left, details on right */
+    align-items: center;      /* vertical alignment of icon and text */
     margin-bottom: 10px;
 }
 
 .current-icon {
-    width: 96px;              /* larger icon */
+    width: 96px;              /* icon size */
     height: 96px;
-    margin-bottom: 8px;       /* space between icon and text */
+    margin-right: 15px;       /* space between icon and text */
 }
 
 .current-details {
     display: flex;
     flex-direction: column;
-    align-items: center;      /* center temperature and condition */
+    align-items: flex-start;  /* text aligned left of details column */
 }
 
 .current-temp {
@@ -44,19 +44,19 @@
 .sun-times {
     font-size: 0.8em;
     margin-top: 4px;
-    text-align: center;        /* center text */
+    text-align: center;       /* centered under the weather */
     width: 100%;
     display: block;
 }
 
 .sun-times span {
-    margin: 0 5px;             /* spacing between sunrise and sunset */
+    margin: 0 5px;
 }
 
 /* Forecast bar */
 .forecast-bar {
     display: flex;
-    justify-content: center;   /* center forecast days */
+    justify-content: center;
     width: 100%;
     margin-top: 10px;
 }

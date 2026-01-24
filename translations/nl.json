@@ -2,12 +2,18 @@
     "LOADING": "Weer laden...",
     "SUNRISE": "Zonsopgang",
     "SUNSET": "Zonsondergang",
-    "CLEAR": "Helder",
-    "CLOUDS": "Bewolkt",
+    "LAST_UPDATE": "Laatste update",
+    "CLEAR-DAY": "Zonnig",
+    "CLEAR-NIGHT": "Helder",
+    "PARTLY-CLOUDY-DAY": "Gedeeltelijk bewolkt",
+    "PARTLY-CLOUDY-NIGHT": "Gedeeltelijk bewolkt",
+    "CLOUDY": "Bewolkt",
     "RAIN": "Regen",
     "SNOW": "Sneeuw",
+    "SLEET": "IJzel",
+    "WIND": "Winderig",
+    "FOG": "Mist",
     "THUNDERSTORM": "Onweer",
     "DRIZZLE": "Motregen",
-    "MIST": "Mist",
-    "LAST_UPDATE": "Laatste update"
+    "MIST": "Mist"
 }

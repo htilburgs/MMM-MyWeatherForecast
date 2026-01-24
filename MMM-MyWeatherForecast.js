@@ -1,8 +1,9 @@
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
-        latitude: "52.3676",
-        longitude: "4.9041",
+        userlat: "52.3676",
+        userlon: "4.9041",
+        units: "si",               // "si" = metric, "us" = imperial
         showForecast: true,
         updateInterval: 10 * 60 * 1000,
         lang: config.language || "en",
@@ -35,9 +36,10 @@ Module.register("MMM-MyWeatherForecast", {
 
     fetchWeather: function() {
         this.sendSocketNotification("FETCH_WEATHER", {
-            latitude: this.config.latitude,
-            longitude: this.config.longitude,
             apiKey: this.config.apiKey,
+            userlat: this.config.userlat,
+            userlon: this.config.userlon,
+            units: this.config.units,
             lang: this.config.lang
         });
     },
@@ -45,16 +47,20 @@ Module.register("MMM-MyWeatherForecast", {
     socketNotificationReceived: function(notification, payload) {
         if (notification === "WEATHER_RESULT") {
             const today = new Date();
-            if (payload.forecast) {
-                payload.forecast.slice(0, 4).forEach((day, index) => {
+
+            if (payload.daily) {
+                // Store next 4 days for forecast
+                payload.daily.slice(1, 5).forEach((day, index) => {
                     const forecastDate = new Date(today);
                     forecastDate.setDate(today.getDate() + index + 1);
                     day.date = forecastDate.toISOString().split("T")[0];
                 });
             }
+
             this.weatherData = payload;
             this.lastUpdate = new Date();
             this.updateDom(1000);
+
         } else if (notification === "WEATHER_ERROR") {
             console.error("MMM-MyWeatherForecast Error:", payload);
         }
@@ -62,26 +68,38 @@ Module.register("MMM-MyWeatherForecast", {
 
     getWeatherIcon: function(condition) {
         const map = {
-            "Clear": "clear.png",
-            "Clouds": "cloudy.png",
-            "Rain": "rain.png",
-            "Snow": "snow.png",
-            "Thunderstorm": "thunderstorm.png",
-            "Drizzle": "drizzle.png",
-            "Mist": "mist.png"
+            "clear-day": "clear.png",
+            "clear-night": "clear.png",
+            "partly-cloudy-day": "cloudy.png",
+            "partly-cloudy-night": "cloudy.png",
+            "cloudy": "cloudy.png",
+            "rain": "rain.png",
+            "snow": "snow.png",
+            "sleet": "snow.png",
+            "wind": "drizzle.png",
+            "fog": "mist.png",
+            "thunderstorm": "thunderstorm.png",
+            "drizzle": "drizzle.png",
+            "mist": "mist.png"
         };
         return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
     getBackgroundGradient: function(condition, isForecast=false) {
         const gradients = {
-            "Clear": "linear-gradient(to bottom, #fceabb, #f8b500)",
-            "Clouds": "linear-gradient(to bottom, #d7d2cc, #304352)",
-            "Rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "Drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
-            "Thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)",
-            "Snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
-            "Mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"
+            "clear-day": "linear-gradient(to bottom, #fceabb, #f8b500)",
+            "clear-night": "linear-gradient(to bottom, #2c3e50, #4ca1af)",
+            "partly-cloudy-day": "linear-gradient(to bottom, #d7d2cc, #304352)",
+            "partly-cloudy-night": "linear-gradient(to bottom, #2c3e50, #4ca1af)",
+            "cloudy": "linear-gradient(to bottom, #d7d2cc, #304352)",
+            "rain": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
+            "sleet": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
+            "snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
+            "wind": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
+            "fog": "linear-gradient(to bottom, #757f9a, #d7dde8)",
+            "thunderstorm": "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)",
+            "drizzle": "linear-gradient(to bottom, #4e54c8, #8f94fb)",
+            "mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"
         };
         let gradient = gradients[condition] || "linear-gradient(to bottom, #fceabb, #f8b500)";
         if (isForecast) gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
@@ -102,10 +120,10 @@ Module.register("MMM-MyWeatherForecast", {
             return wrapper;
         }
 
-        const current = this.weatherData.current;
-        const forecast = this.weatherData.forecast;
+        const current = this.weatherData.currently;
+        const forecast = this.weatherData.daily;
 
-        wrapper.style.background = this.getBackgroundGradient(current.condition);
+        wrapper.style.background = this.getBackgroundGradient(current.icon);
         wrapper.style.borderRadius = "15px";
         wrapper.style.padding = "15px";
         wrapper.style.color = "#fff";
@@ -115,7 +133,7 @@ Module.register("MMM-MyWeatherForecast", {
         currentDiv.className = "current-weather";
 
         const icon = document.createElement("img");
-        icon.src = this.getWeatherIcon(current.condition);
+        icon.src = this.getWeatherIcon(current.icon);
         icon.className = "current-icon";
 
         const details = document.createElement("div");
@@ -123,15 +141,20 @@ Module.register("MMM-MyWeatherForecast", {
 
         const temp = document.createElement("div");
         temp.className = "current-temp";
-        temp.innerHTML = `${current.temperature}°C`;
+        temp.innerHTML = `${current.temperature}°`;
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
-        conditionText.innerHTML = this.translate(current.condition.toUpperCase());
+        conditionText.innerHTML = this.translate(current.icon.toUpperCase()) || current.summary;
 
         const sun = document.createElement("div");
         sun.className = "sun-times";
-        sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${current.sunrise}</span> | <span>${this.translate("SUNSET")}: ${current.sunset}</span>`;
+        if (this.weatherData.daily && this.weatherData.daily.data) {
+            const todayData = this.weatherData.daily.data[0];
+            const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
+        }
 
         details.appendChild(temp);
         details.appendChild(conditionText);
@@ -146,22 +169,22 @@ Module.register("MMM-MyWeatherForecast", {
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
 
-            forecast.slice(0, 4).forEach(day => {
+            forecast.data.slice(1,5).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
-                dayDiv.style.background = this.getBackgroundGradient(day.condition, true);
+                dayDiv.style.background = this.getBackgroundGradient(day.icon, true);
 
                 const dayName = document.createElement("div");
                 dayName.className = "forecast-day-name";
-                dayName.innerHTML = this.getDayName(day.date);
+                dayName.innerHTML = this.getDayName(new Date(day.time * 1000).toISOString());
 
                 const dayIcon = document.createElement("img");
-                dayIcon.src = this.getWeatherIcon(day.condition);
+                dayIcon.src = this.getWeatherIcon(day.icon);
                 dayIcon.className = "forecast-icon";
 
                 const dayTemp = document.createElement("div");
                 dayTemp.className = "forecast-temp";
-                dayTemp.innerHTML = `${day.min}° / ${day.max}°C`;
+                dayTemp.innerHTML = `${day.temperatureMin}° / ${day.temperatureMax}°`;
 
                 dayDiv.appendChild(dayName);
                 dayDiv.appendChild(dayIcon);
@@ -177,7 +200,7 @@ Module.register("MMM-MyWeatherForecast", {
         if (this.config.showLastUpdate && this.lastUpdate) {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";
-            updateDiv.innerHTML = `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            updateDiv.innerHTML = `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
             wrapper.appendChild(updateDiv);
         }
 

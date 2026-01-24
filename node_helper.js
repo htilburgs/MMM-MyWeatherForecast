@@ -4,27 +4,21 @@ const fetch = require("node-fetch");
 module.exports = NodeHelper.create({
     start: function() {
         console.log("MMM-MyWeatherForecast helper started...");
-        this.cache = null; // Store last successful weather data
+        this.cache = null; // store last successful weather data
     },
 
     socketNotificationReceived: async function(notification, payload) {
         if (notification === "FETCH_WEATHER") {
             const { latitude, longitude, apiKey, lang } = payload;
-
             const url = `https://api.piratesky.com/weather?lat=${latitude}&lon=${longitude}&apikey=${apiKey}&lang=${lang}`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-
-                // Cache the last successful data
-                this.cache = data;
-
+                this.cache = data; // cache successful result
                 this.sendSocketNotification("WEATHER_RESULT", data);
             } catch (err) {
                 console.error("MMM-MyWeatherForecast fetch error:", err);
-
-                // If fetch fails, send cached data if available
                 if (this.cache) {
                     console.warn("Sending cached weather data due to API failure.");
                     this.sendSocketNotification("WEATHER_RESULT", this.cache);

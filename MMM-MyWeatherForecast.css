@@ -139,8 +139,9 @@
    Last Update
 ========================= */
 .last-update {
-    font-size: 0.6em;
-    color: #ccc;
+    font-size: 0.5em;
+/*    color: #ccc;   */
+    color: #DCDCDC;
     margin-top: 4px;
     text-align: right;
     width: 100%;

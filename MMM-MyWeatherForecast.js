@@ -79,7 +79,7 @@ Module.register("MMM-MyWeatherForecast", {
             "clear-day": "clear.png",
             "clear-night": "clear.png",
             "partly-cloudy-day": "partly-cloudy.png",
-            "partly-cloudy-night": "cloudy.png",
+            "partly-cloudy-night": "partly-cloudy-night.png",
             "cloudy": "cloudy.png",
             "rain": "rain.png",
             "snow": "snow.png",

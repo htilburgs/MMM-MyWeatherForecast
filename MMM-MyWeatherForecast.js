@@ -11,13 +11,20 @@ Module.register("MMM-MyWeatherForecast", {
         lang: "en" // Module-specific language
     },
 
-    // --- Set language immediately from defaults to override global MagicMirror language ---
-    language: null,
-
     start: function() {
-        this.language = this.config.lang;  // Module-specific language
         this.weatherData = null;
         this.lastUpdate = null;
+
+        // --- Override translate to force module language ---
+        const originalTranslate = this.translate;
+        this.translate = (key) => {
+            const oldLang = this.language;
+            this.language = this.config.lang; // temporarily force language
+            const result = originalTranslate.call(this, key);
+            this.language = oldLang; // restore
+            return result;
+        };
+
         this.scheduleUpdate();
     },
 

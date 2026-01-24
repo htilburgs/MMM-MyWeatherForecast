@@ -13,7 +13,7 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 10px;
-    /* Removed border-bottom */
+    /* No border-bottom here */
     padding-bottom: 0;
 }
 
@@ -39,7 +39,7 @@
     margin-top: 2px;
 }
 
-/* Sunrise / Sunset text with spacing */
+/* Sunrise / Sunset text */
 .sun-times {
     font-size: 0.8em;
     margin-top: 12px;
@@ -68,8 +68,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start; /* icon on top, text below */
     margin: 0 5px;
     position: relative; /* for vertical separator */
+    padding-top: 6px; /* shifts text slightly lower under icon */
 }
 
 /* Vertical separator lines between forecast days */
@@ -83,19 +85,24 @@
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Day name styling */
 .forecast-day-name {
     font-size: 0.8em;
-    margin-bottom: 4px;
+    margin-top: 6px; /* spacing under icon */
+    margin-bottom: 2px;
 }
 
+/* Forecast icon */
 .forecast-icon {
     width: 48px;
     height: 48px;
-    margin-bottom: 4px;
 }
 
+/* Temperature styling */
 .forecast-temp {
     font-size: 0.9em;
+    margin-top: 2px;
+    text-align: center;
 }
 
 /* Last update */

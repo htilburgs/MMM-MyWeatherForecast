@@ -54,3 +54,5 @@ Add the module to your modules array in your config.js.
 
 ## Versions
 v1.0.0  - Initial release </br>
+v1.1.0  - Code and CSS optimize
+v1.2.0  - Add Iconsets

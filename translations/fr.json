@@ -1,0 +1,12 @@
+{
+    "LOADING": "Chargement météo...",
+    "SUNRISE": "Lever du soleil",
+    "SUNSET": "Coucher du soleil",
+    "CLEAR": "Dégagé",
+    "CLOUDS": "Nuageux",
+    "RAIN": "Pluie",
+    "SNOW": "Neige",
+    "THUNDERSTORM": "Orage",
+    "DRIZZLE": "Bruine",
+    "MIST": "Brume"
+}

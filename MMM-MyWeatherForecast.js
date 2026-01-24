@@ -5,9 +5,10 @@ Module.register("MMM-MyWeatherForecast", {
         userlon: "4.9041",
         units: "si",
         showForecast: true,
+        showLastUpdate: true,
+        showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
         lang: config.language || "en",
-        showLastUpdate: true
     },
 
     start: function() {
@@ -46,26 +47,22 @@ Module.register("MMM-MyWeatherForecast", {
 
     socketNotificationReceived: function(notification, payload) {
         if (notification === "WEATHER_RESULT") {
-            if (!payload || !payload.currently || !payload.daily) {
-                console.error("[MMM-MyWeatherForecast] Invalid weather data:", payload);
-                return;
-            }
+            if (!payload || !payload.currently || !payload.daily) return;
 
             const today = new Date();
 
-            // Prepare next 4 days forecast
+            // Prepare next 4 days
             if (payload.daily.data) {
-                payload.daily.data.slice(1,5).forEach((day, index) => {
-                    const forecastDate = new Date(today);
-                    forecastDate.setDate(today.getDate() + index + 1);
-                    day.date = forecastDate.toISOString().split("T")[0];
+                payload.daily.data.slice(1,5).forEach((day,index)=>{
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + index +1);
+                    day.date = date.toISOString().split("T")[0];
                 });
             }
 
             this.weatherData = payload;
             this.lastUpdate = new Date();
             this.updateDom(1000);
-
         } else if (notification === "WEATHER_ERROR") {
             console.error("[MMM-MyWeatherForecast] WEATHER_ERROR:", payload);
         }
@@ -107,10 +104,6 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.currently;
         const forecast = this.weatherData.daily;
 
-        wrapper.style.borderRadius = "15px";
-        wrapper.style.padding = "15px";
-        wrapper.style.color = "#fff";
-
         // Current weather
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
@@ -130,22 +123,23 @@ Module.register("MMM-MyWeatherForecast", {
         conditionText.className = "current-condition";
         conditionText.innerHTML = this.translate(current.icon.toUpperCase()) || current.summary;
 
-        const sun = document.createElement("div");
-        sun.className = "sun-times";
-        if (this.weatherData.daily.data) {
-            const todayData = this.weatherData.daily.data[0];
-            const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
-        }
-
         details.appendChild(temp);
         details.appendChild(conditionText);
-        details.appendChild(sun);
 
         currentDiv.appendChild(icon);
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
+
+        // Sunrise / Sunset
+        if (this.config.showSunTimes && this.weatherData.daily.data) {
+            const todayData = this.weatherData.daily.data[0];
+            const sun = document.createElement("div");
+            sun.className = "sun-times";
+            const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
+            wrapper.appendChild(sun);
+        }
 
         // Forecast
         if (this.config.showForecast && forecast && forecast.data) {
@@ -155,11 +149,10 @@ Module.register("MMM-MyWeatherForecast", {
             forecast.data.slice(1,5).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
-                // No background colors
 
                 const dayName = document.createElement("div");
                 dayName.className = "forecast-day-name";
-                dayName.innerHTML = this.getDayName(new Date(day.time * 1000).toISOString());
+                dayName.innerHTML = this.getDayName(new Date(day.time*1000).toISOString());
 
                 const dayIcon = document.createElement("img");
                 dayIcon.src = this.getWeatherIcon(day.icon);
@@ -179,7 +172,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(forecastDiv);
         }
 
-        // Last update timestamp
+        // Last update
         if (this.config.showLastUpdate && this.lastUpdate) {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";

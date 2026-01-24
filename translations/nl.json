@@ -1,8 +1,31 @@
-{
+  {
   "LOADING": "Laden...",
   "SUNRISE": "Zonsopgang",
   "SUNSET": "Zonsondergang",
   "LAST_UPDATE": "Laatste update",
+  "FORECAST": "Voorspelling",
+  "CLEAR-DAY": "Helder",
+  "CLEAR-NIGHT": "Helder Nacht",
+  "PARTLY-CLOUDY-DAY": "Half Bewolkt",
+  "PARTLY-CLOUDY-NIGHT": "Half Bewolkt Nacht",
+  "CLOUDY": "Bewolkt",
+  "RAIN": "Regen",
+  "SNOW": "Sneeuw",
+  "SLEET": "IJzel",
+  "WIND": "Wind",
+  "FOG": "Mist",
+  "THUNDERSTORM": "Onweer",
+  "DRIZZLE": "Motregen",
+  "MIST": "Mist",
+  "MON": "Ma",
+  "TUE": "Di",
+  "WED": "Wo",
+  "THU": "Do",
+  "FRI": "Vr",
+  "SAT": "Za",
+  "SUN": "Zo"
+}
+
   "CLEAR-DAY": "Helder",
   "CLEAR-NIGHT": "Helder Nacht",
   "PARTLY-CLOUDY-DAY": "Half Bewolkt",

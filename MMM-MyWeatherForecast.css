@@ -110,5 +110,6 @@
     font-size: 0.7em;
     color: #ccc;
     margin-top: 5px;
-    text-align: right;
+    text-align: right;   /* align right */
+    width: 100%;         /* take full width so right-align works */
 }

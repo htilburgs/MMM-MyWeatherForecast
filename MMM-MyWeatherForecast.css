@@ -13,6 +13,8 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle horizontal line */
+    padding-bottom: 10px;
 }
 
 .current-icon {
@@ -40,9 +42,11 @@
 /* Sunrise / Sunset text with spacing */
 .sun-times {
     font-size: 0.8em;
-    margin-top: 12px;  /* empty line above */
+    margin-top: 12px;
     text-align: center;
     width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle horizontal line */
+    padding-bottom: 8px;
 }
 
 .sun-times span {
@@ -55,13 +59,28 @@
     justify-content: center;
     margin-top: 10px;
     width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* line below forecast */
+    padding-bottom: 10px;
 }
 
+/* Each day in forecast */
 .forecast-day {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 5px;
+    position: relative; /* for vertical separator */
+}
+
+/* Vertical separator lines between forecast days */
+.forecast-day:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .forecast-day-name {

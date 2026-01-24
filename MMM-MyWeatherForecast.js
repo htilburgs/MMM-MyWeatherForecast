@@ -8,12 +8,16 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en", // Module-specific language, independent of MagicMirror global language
+        lang: "en", // Module-specific language
     },
 
     start: function() {
         this.weatherData = null;
         this.lastUpdate = null;
+
+        // Force module to use its own config.lang for translations
+        this.language = this.config.lang;
+
         this.scheduleUpdate();
     },
 
@@ -41,7 +45,7 @@ Module.register("MMM-MyWeatherForecast", {
             userlat: this.config.userlat,
             userlon: this.config.userlon,
             units: this.config.units,
-            lang: this.config.lang // use module language for API if needed
+            lang: this.config.lang // optional, if your API supports it
         });
     },
 
@@ -51,7 +55,6 @@ Module.register("MMM-MyWeatherForecast", {
 
             const today = new Date();
 
-            // Prepare next 4 days
             if (payload.daily.data) {
                 payload.daily.data.slice(1,5).forEach((day,index)=>{
                     const date = new Date(today);
@@ -122,7 +125,6 @@ Module.register("MMM-MyWeatherForecast", {
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
 
-        // Translate condition, fallback to summary
         const iconKey = current.icon.toUpperCase();
         const translatedCondition = this.translate(iconKey);
         conditionText.innerHTML = translatedCondition !== iconKey ? translatedCondition : current.summary;

@@ -2,12 +2,18 @@
     "LOADING": "Loading weather...",
     "SUNRISE": "Sunrise",
     "SUNSET": "Sunset",
-    "CLEAR": "Clear",
-    "CLOUDS": "Cloudy",
+    "LAST_UPDATE": "Last update",
+    "CLEAR-DAY": "Sunny",
+    "CLEAR-NIGHT": "Clear Night",
+    "PARTLY-CLOUDY-DAY": "Partly Cloudy",
+    "PARTLY-CLOUDY-NIGHT": "Partly Cloudy Night",
+    "CLOUDY": "Cloudy",
     "RAIN": "Rain",
     "SNOW": "Snow",
+    "SLEET": "Sleet",
+    "WIND": "Windy",
+    "FOG": "Fog",
     "THUNDERSTORM": "Thunderstorm",
     "DRIZZLE": "Drizzle",
-    "MIST": "Mist",
-    "LAST_UPDATE": "Last update"
+    "MIST": "Mist"
 }

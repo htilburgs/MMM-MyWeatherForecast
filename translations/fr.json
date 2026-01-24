@@ -8,5 +8,6 @@
     "SNOW": "Neige",
     "THUNDERSTORM": "Orage",
     "DRIZZLE": "Bruine",
-    "MIST": "Brume"
+    "MIST": "Brume",
+    "LAST_UPDATE": "Dernière mise à jour"
 }

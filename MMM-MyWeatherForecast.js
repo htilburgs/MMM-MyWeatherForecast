@@ -14,31 +14,23 @@ Module.register("MMM-MyWeatherForecast", {
     start: function() {
         this.weatherData = null;
         this.lastUpdate = null;
+        this.moduleTranslations = {};
 
-        // --- Override translate to force module language ---
-        const originalTranslate = this.translate;
-        this.translate = (key) => {
-            const oldLang = this.language;
-            this.language = this.config.lang; // temporarily force language
-            const result = originalTranslate.call(this, key);
-            this.language = oldLang; // restore
-            return result;
-        };
+        // --- Manually load the translation JSON ---
+        const lang = this.config.lang || "en";
+        fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`)
+            .then(res => res.json())
+            .then(json => {
+                this.moduleTranslations = json;
+                this.updateDom();
+            })
+            .catch(err => console.error("Failed to load translations:", err));
 
         this.scheduleUpdate();
     },
 
     getStyles: function() {
         return ["MMM-MyWeatherForecast.css"];
-    },
-
-    getTranslations: function() {
-        return {
-            en: "translations/en.json",
-            nl: "translations/nl.json",
-            de: "translations/de.json",
-            fr: "translations/fr.json"
-        };
     },
 
     scheduleUpdate: function() {
@@ -77,6 +69,11 @@ Module.register("MMM-MyWeatherForecast", {
         }
     },
 
+    // --- Manual translation function ---
+    translateModule: function(key) {
+        return (this.moduleTranslations && this.moduleTranslations[key]) || key;
+    },
+
     getWeatherIcon: function(condition) {
         const map = {
             "clear-day": "clear.png",
@@ -106,7 +103,7 @@ Module.register("MMM-MyWeatherForecast", {
         wrapper.className = "myweather-wrapper";
 
         if (!this.weatherData) {
-            wrapper.innerHTML = this.translate("LOADING");
+            wrapper.innerHTML = this.translateModule("LOADING");
             return wrapper;
         }
 
@@ -131,8 +128,7 @@ Module.register("MMM-MyWeatherForecast", {
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
         const iconKey = current.icon.toUpperCase();
-        const translatedCondition = this.translate(iconKey);
-        conditionText.innerHTML = translatedCondition !== iconKey ? translatedCondition : current.summary;
+        conditionText.innerHTML = this.translateModule(iconKey) || current.summary;
 
         details.appendChild(temp);
         details.appendChild(conditionText);
@@ -147,7 +143,7 @@ Module.register("MMM-MyWeatherForecast", {
             sun.className = "sun-times";
             const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
+            sun.innerHTML = `<span>${this.translateModule("SUNRISE")}: ${sunrise}</span> | <span>${this.translateModule("SUNSET")}: ${sunset}</span>`;
             wrapper.appendChild(sun);
         }
 
@@ -187,7 +183,7 @@ Module.register("MMM-MyWeatherForecast", {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";
             updateDiv.style.textAlign = "right";
-            updateDiv.innerHTML = `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+            updateDiv.innerHTML = `${this.translateModule("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
             wrapper.appendChild(updateDiv);
         }
 

@@ -5,11 +5,13 @@ Module.register("MMM-MyWeatherForecast", {
         longitude: "4.9041",
         showForecast: true,
         updateInterval: 10 * 60 * 1000,
-        lang: config.language || "en"
+        lang: config.language || "en",
+        showLastUpdate: true
     },
 
     start: function() {
         this.weatherData = null;
+        this.lastUpdate = null;
         this.scheduleUpdate();
     },
 
@@ -51,6 +53,7 @@ Module.register("MMM-MyWeatherForecast", {
                 });
             }
             this.weatherData = payload;
+            this.lastUpdate = new Date();
             this.updateDom(1000);
         } else if (notification === "WEATHER_ERROR") {
             console.error("MMM-MyWeatherForecast Error:", payload);
@@ -168,6 +171,14 @@ Module.register("MMM-MyWeatherForecast", {
             });
 
             wrapper.appendChild(forecastDiv);
+        }
+
+        // Last update timestamp
+        if (this.config.showLastUpdate && this.lastUpdate) {
+            const updateDiv = document.createElement("div");
+            updateDiv.className = "last-update";
+            updateDiv.innerHTML = `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            wrapper.appendChild(updateDiv);
         }
 
         return wrapper;

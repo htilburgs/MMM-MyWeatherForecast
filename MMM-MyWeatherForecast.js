@@ -78,7 +78,7 @@ Module.register("MMM-MyWeatherForecast", {
         const map = {
             "clear-day": "clear.png",
             "clear-night": "clear.png",
-            "partly-cloudy-day": "cloudy.png",
+            "partly-cloudy-day": "partly-cloudy.png",
             "partly-cloudy-night": "cloudy.png",
             "cloudy": "cloudy.png",
             "rain": "rain.png",

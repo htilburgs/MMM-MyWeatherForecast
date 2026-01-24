@@ -43,6 +43,7 @@ Add the module to your modules array in your config.js.
                 showLastUpdate: true,           // Show when the data is last updated
                 showSunTimes: true,             // Show Sun up and Sun Down information 
                 lang: "en",                     // Select language nl, de, en, fr
+                iconSet: "standard",            // standard | animated | flat
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
                 }    
 },

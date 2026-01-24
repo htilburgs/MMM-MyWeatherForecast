@@ -8,16 +8,10 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en", // Module-specific language
+        lang: "en" // Module-specific language
     },
 
-    // IMPORTANT: this tells MagicMirror which language to use for this module
-    language: null,
-
     start: function() {
-        // Force the module to use its own language immediately
-        this.language = this.config.lang;
-
         this.weatherData = null;
         this.lastUpdate = null;
         this.scheduleUpdate();
@@ -34,6 +28,14 @@ Module.register("MMM-MyWeatherForecast", {
             de: "translations/de.json",
             fr: "translations/fr.json"
         };
+    },
+
+    // --- Custom translation function to enforce module language ---
+    translateModule: function(key) {
+        // Force translation using module config.lang instead of global language
+        const translations = this.translations[this.config.lang] || {};
+        if (translations[key]) return translations[key];
+        return key; // fallback to key if translation missing
     },
 
     scheduleUpdate: function() {
@@ -56,7 +58,6 @@ Module.register("MMM-MyWeatherForecast", {
             if (!payload || !payload.currently || !payload.daily) return;
 
             const today = new Date();
-
             if (payload.daily.data) {
                 payload.daily.data.slice(1,5).forEach((day,index)=>{
                     const date = new Date(today);
@@ -102,7 +103,7 @@ Module.register("MMM-MyWeatherForecast", {
         wrapper.className = "myweather-wrapper";
 
         if (!this.weatherData) {
-            wrapper.innerHTML = this.translate("LOADING");
+            wrapper.innerHTML = this.translateModule("LOADING");
             return wrapper;
         }
 
@@ -126,14 +127,12 @@ Module.register("MMM-MyWeatherForecast", {
 
         const conditionText = document.createElement("div");
         conditionText.className = "current-condition";
-
         const iconKey = current.icon.toUpperCase();
-        const translatedCondition = this.translate(iconKey);
+        const translatedCondition = this.translateModule(iconKey);
         conditionText.innerHTML = translatedCondition !== iconKey ? translatedCondition : current.summary;
 
         details.appendChild(temp);
         details.appendChild(conditionText);
-
         currentDiv.appendChild(icon);
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
@@ -145,7 +144,7 @@ Module.register("MMM-MyWeatherForecast", {
             sun.className = "sun-times";
             const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
+            sun.innerHTML = `<span>${this.translateModule("SUNRISE")}: ${sunrise}</span> | <span>${this.translateModule("SUNSET")}: ${sunset}</span>`;
             wrapper.appendChild(sun);
         }
 
@@ -184,8 +183,8 @@ Module.register("MMM-MyWeatherForecast", {
         if (this.config.showLastUpdate && this.lastUpdate) {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";
-            updateDiv.style.textAlign = "right"; // ensure right alignment
-            updateDiv.innerHTML = `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+            updateDiv.style.textAlign = "right";
+            updateDiv.innerHTML = `${this.translateModule("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
             wrapper.appendChild(updateDiv);
         }
 

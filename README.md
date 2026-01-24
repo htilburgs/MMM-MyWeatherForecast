@@ -1,7 +1,7 @@
 # MMM-MyWeatherForecast
-This a MagicMirror² module for weather information and an optional 4-day forecast.
+This a MagicMirror² module for weather information and an optional 4-day forecast. </br></br>
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/e496cc88-4317-4566-98cd-594cccb08faf" />
+<img width="415" height="335" alt="image" src="https://github.com/user-attachments/assets/b9444dd3-bb8b-4096-b54d-95042e56efd1" />
 
 
 ## Installation

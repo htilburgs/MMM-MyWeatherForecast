@@ -31,26 +31,29 @@ Module.register("MMM-MyWeatherForecast", {
         this.fetchWeather();
     },
 
-    fetchWeather: async function() {
-        const url = `http://localhost:8080/weather?lat=${this.config.latitude}&lon=${this.config.longitude}&apikey=${this.config.apiKey}&lang=${this.config.lang}`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
+    fetchWeather: function() {
+        this.sendSocketNotification("FETCH_WEATHER", {
+            latitude: this.config.latitude,
+            longitude: this.config.longitude,
+            apiKey: this.config.apiKey,
+            lang: this.config.lang
+        });
+    },
 
-            // Ensure each forecast day has a date for localized day names
+    socketNotificationReceived: function(notification, payload) {
+        if (notification === "WEATHER_RESULT") {
             const today = new Date();
-            if (data.forecast) {
-                data.forecast.slice(0, 4).forEach((day, index) => {
+            if (payload.forecast) {
+                payload.forecast.slice(0, 4).forEach((day, index) => {
                     const forecastDate = new Date(today);
                     forecastDate.setDate(today.getDate() + index + 1);
                     day.date = forecastDate.toISOString().split("T")[0];
                 });
             }
-
-            this.weatherData = data;
+            this.weatherData = payload;
             this.updateDom(1000);
-        } catch (error) {
-            console.error("MMM-MyWeatherForecast Error:", error);
+        } else if (notification === "WEATHER_ERROR") {
+            console.error("MMM-MyWeatherForecast Error:", payload);
         }
     },
 
@@ -77,7 +80,6 @@ Module.register("MMM-MyWeatherForecast", {
             "Snow": "linear-gradient(to bottom, #e6e9f0, #eef1f5)",
             "Mist": "linear-gradient(to bottom, #757f9a, #d7dde8)"
         };
-
         let gradient = gradients[condition] || "linear-gradient(to bottom, #fceabb, #f8b500)";
         if (isForecast) gradient = gradient.replace(/rgba?\(([^)]+)\)/g, "rgba($1,0.6)");
         return gradient;
@@ -100,7 +102,6 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.current;
         const forecast = this.weatherData.forecast;
 
-        // Main background
         wrapper.style.background = this.getBackgroundGradient(current.condition);
         wrapper.style.borderRadius = "15px";
         wrapper.style.padding = "15px";

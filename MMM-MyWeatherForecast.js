@@ -1,22 +1,23 @@
 Module.register("MMM-MyWeatherForecast", {
+
     defaults: {
         apiKey: "",
-        latitude: "52.3676",   
-        longitude: "4.9041",   
-        units: "metric", // "metric" or "imperial"
+        latitude: "52.3676",
+        longitude: "4.9041",
+        units: "metric", // metric | imperial
+        iconSet: "standard", // standard | outline | animated
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en" // Module-specific language
+        lang: "en"
     },
 
-    start: function() {
+    start: function () {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
 
-        // --- Load translation JSON manually ---
         const lang = this.config.lang || "en";
         fetch(`modules/MMM-MyWeatherForecast/translations/${lang}.json`)
             .then(res => res.json())
@@ -24,113 +25,148 @@ Module.register("MMM-MyWeatherForecast", {
                 this.moduleTranslations = json;
                 this.updateDom();
             })
-            .catch(err => console.error("Failed to load translations:", err));
+            .catch(err => {
+                console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
+            });
 
         this.scheduleUpdate();
     },
 
-    getStyles: function() {
+    getStyles: function () {
         return ["MMM-MyWeatherForecast.css"];
     },
 
-    // --- Map module units to API units ---
-    getApiUnits: function() {
+    /* -------------------- API HELPERS -------------------- */
+
+    getApiUnits: function () {
         return this.config.units === "imperial" ? "us" : "si";
     },
 
-    // --- Get temperature unit symbol ---
-    getTempUnit: function() {
+    getTempUnit: function () {
         return this.config.units === "imperial" ? "°F" : "°C";
     },
 
-    scheduleUpdate: function() {
-        setInterval(() => this.fetchWeather(), this.config.updateInterval);
+    scheduleUpdate: function () {
         this.fetchWeather();
+        setInterval(() => this.fetchWeather(), this.config.updateInterval);
     },
 
-    fetchWeather: function() {
+    fetchWeather: function () {
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,
-            userlat: this.config.latitude,   // API still expects userlat
-            userlon: this.config.longitude,  // API still expects userlon
+            userlat: this.config.latitude,
+            userlon: this.config.longitude,
             units: this.getApiUnits(),
             lang: this.config.lang
         });
     },
 
-    socketNotificationReceived: function(notification, payload) {
+    socketNotificationReceived: function (notification, payload) {
         if (notification === "WEATHER_RESULT") {
             if (!payload || !payload.currently || !payload.daily) return;
-
-            const today = new Date();
-            if (payload.daily.data) {
-                payload.daily.data.slice(1,5).forEach((day,index)=>{
-                    const date = new Date(today);
-                    date.setDate(today.getDate() + index + 1);
-                    day.date = date.toISOString().split("T")[0];
-                });
-            }
 
             this.weatherData = payload;
             this.lastUpdate = new Date();
             this.updateDom(1000);
-        } else if (notification === "WEATHER_ERROR") {
+        }
+
+        if (notification === "WEATHER_ERROR") {
             console.error("[MMM-MyWeatherForecast] WEATHER_ERROR:", payload);
         }
     },
 
-    // --- Manual translation ---
-    translateModule: function(key) {
-        return (this.moduleTranslations && this.moduleTranslations[key]) || key;
+    /* -------------------- TRANSLATION -------------------- */
+
+    translateModule: function (key) {
+        return this.moduleTranslations[key] || key;
     },
 
-    getWeatherIcon: function(condition) {
-        const map = {
-            "clear-day": "clear.png",
-            "clear-night": "clear.png",
-            "partly-cloudy-day": "partly-cloudy.png",
-            "partly-cloudy-night": "partly-cloudy-night.png",
-            "cloudy": "cloudy.png",
-            "rain": "rain.png",
-            "snow": "snow.png",
-            "sleet": "snow.png",
-            "wind": "drizzle.png",
-            "fog": "mist.png",
-            "thunderstorm": "thunderstorm.png",
-            "drizzle": "drizzle.png",
-            "mist": "mist.png"
+    /* -------------------- ICON SYSTEM -------------------- */
+
+    getIconMaps: function () {
+        return {
+            standard: {
+                "clear-day": "clear.png",
+                "clear-night": "clear.png",
+                "partly-cloudy-day": "partly-cloudy.png",
+                "partly-cloudy-night": "partly-cloudy-night.png",
+                "cloudy": "cloudy.png",
+                "rain": "rain.png",
+                "snow": "snow.png",
+                "sleet": "snow.png",
+                "wind": "drizzle.png",
+                "fog": "mist.png",
+                "thunderstorm": "thunderstorm.png",
+                "drizzle": "drizzle.png",
+                "mist": "mist.png"
+            },
+
+            outline: {
+                "clear-day": "sun-outline.png",
+                "clear-night": "moon-outline.png",
+                "partly-cloudy-day": "cloud-sun-outline.png",
+                "partly-cloudy-night": "cloud-moon-outline.png",
+                "cloudy": "cloud-outline.png",
+                "rain": "rain-outline.png",
+                "snow": "snow-outline.png",
+                "thunderstorm": "storm-outline.png",
+                "fog": "fog-outline.png"
+            },
+
+            animated: {
+                "clear-day": "clear-day.gif",
+                "clear-night": "clear-night.gif",
+                "partly-cloudy-day": "partly-cloudy-day.gif",
+                "cloudy": "cloudy.gif",
+                "rain": "rain.gif",
+                "snow": "snow.gif",
+                "thunderstorm": "thunderstorm.gif"
+            }
         };
-        return `modules/MMM-MyWeatherForecast/images/${map[condition] || "clear.png"}`;
     },
 
-    // --- Translated weekday names ---
-    getDayName: function(dateString) {
-        const date = new Date(dateString);
-        const weekdayIndex = date.getDay(); // 0 = Sunday
-        const weekdays = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
-        return this.translateModule(weekdays[weekdayIndex]);
+    getWeatherIcon: function (condition) {
+        const iconSet = this.config.iconSet || "standard";
+        const maps = this.getIconMaps();
+
+        const setMap = maps[iconSet] || maps.standard;
+        const iconFile =
+            setMap[condition] ||
+            maps.standard[condition] ||
+            "clear.png";
+
+        return `modules/MMM-MyWeatherForecast/images/${iconSet}/${iconFile}`;
     },
 
-    getDom: function() {
+    /* -------------------- DATE HELPERS -------------------- */
+
+    getDayName: function (timestamp) {
+        const date = new Date(timestamp * 1000);
+        const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        return this.translateModule(weekdays[date.getDay()]);
+    },
+
+    /* -------------------- DOM -------------------- */
+
+    getDom: function () {
         const wrapper = document.createElement("div");
         wrapper.className = "myweather-wrapper";
 
-        // --- Safe loading check ---
-        if (!this.weatherData || !this.moduleTranslations || Object.keys(this.moduleTranslations).length === 0) {
-            wrapper.innerHTML = this.translateModule("LOADING") || "Loading...";
+        if (!this.weatherData || Object.keys(this.moduleTranslations).length === 0) {
+            wrapper.innerHTML = this.translateModule("LOADING");
             return wrapper;
         }
 
         const current = this.weatherData.currently;
         const forecast = this.weatherData.daily;
 
-        // --- Current weather ---
+        /* ---- Current Weather ---- */
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
 
         const icon = document.createElement("img");
-        icon.src = this.getWeatherIcon(current.icon);
         icon.className = "current-icon";
+        icon.src = this.getWeatherIcon(current.icon);
 
         const details = document.createElement("div");
         details.className = "current-details";
@@ -139,71 +175,86 @@ Module.register("MMM-MyWeatherForecast", {
         temp.className = "current-temp";
         temp.innerHTML = `${current.temperature.toFixed(1)}${this.getTempUnit()}`;
 
-        const conditionText = document.createElement("div");
-        conditionText.className = "current-condition";
-        const iconKey = current.icon.toUpperCase();
-        conditionText.innerHTML = this.translateModule(iconKey) || current.summary;
+        const condition = document.createElement("div");
+        condition.className = "current-condition";
+        condition.innerHTML =
+            this.translateModule(current.icon.toUpperCase()) || current.summary;
 
         details.appendChild(temp);
-        details.appendChild(conditionText);
+        details.appendChild(condition);
         currentDiv.appendChild(icon);
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
 
-        // --- Sunrise / Sunset ---
-        if (this.config.showSunTimes && this.weatherData.daily.data) {
-            const todayData = this.weatherData.daily.data[0];
-            const sun = document.createElement("div");
-            sun.className = "sun-times";
-            const sunrise = new Date(todayData.sunriseTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            const sunset = new Date(todayData.sunsetTime * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            sun.innerHTML = `<span>${this.translateModule("SUNRISE")}: ${sunrise}</span> | <span>${this.translateModule("SUNSET")}: ${sunset}</span>`;
-            wrapper.appendChild(sun);
+        /* ---- Sun Times ---- */
+        if (this.config.showSunTimes && forecast?.data?.length) {
+            const today = forecast.data[0];
+            const sunDiv = document.createElement("div");
+            sunDiv.className = "sun-times";
+
+            const sunrise = new Date(today.sunriseTime * 1000)
+                .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+            const sunset = new Date(today.sunsetTime * 1000)
+                .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+            sunDiv.innerHTML = `
+                <span>${this.translateModule("SUNRISE")}: ${sunrise}</span>
+                |
+                <span>${this.translateModule("SUNSET")}: ${sunset}</span>
+            `;
+
+            wrapper.appendChild(sunDiv);
         }
 
-        // --- Forecast header + 4-day forecast ---
-        if (this.config.showForecast && forecast && forecast.data) {
-            const forecastHeader = document.createElement("div");
-            forecastHeader.className = "forecast-header";
-            forecastHeader.innerHTML = this.translateModule("FORECAST_4_DAYS");
-            wrapper.appendChild(forecastHeader);
+        /* ---- Forecast ---- */
+        if (this.config.showForecast && forecast?.data?.length) {
+            const header = document.createElement("div");
+            header.className = "forecast-header";
+            header.innerHTML = this.translateModule("FORECAST_4_DAYS");
+            wrapper.appendChild(header);
 
-            const forecastDiv = document.createElement("div");
-            forecastDiv.className = "forecast-bar";
+            const bar = document.createElement("div");
+            bar.className = "forecast-bar";
 
-            forecast.data.slice(1,5).forEach(day => {
+            forecast.data.slice(1, 5).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
 
-                const dayName = document.createElement("div");
-                dayName.className = "forecast-day-name";
-                dayName.innerHTML = this.getDayName(new Date(day.time*1000).toISOString());
+                const name = document.createElement("div");
+                name.className = "forecast-day-name";
+                name.innerHTML = this.getDayName(day.time);
 
-                const dayIcon = document.createElement("img");
-                dayIcon.src = this.getWeatherIcon(day.icon);
-                dayIcon.className = "forecast-icon";
+                const icon = document.createElement("img");
+                icon.className = "forecast-icon";
+                icon.src = this.getWeatherIcon(day.icon);
 
-                const dayTemp = document.createElement("div");
-                dayTemp.className = "forecast-temp";
-                dayTemp.innerHTML = `${day.temperatureMin.toFixed(1)}${this.getTempUnit()} / ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}`;
+                const temp = document.createElement("div");
+                temp.className = "forecast-temp";
+                temp.innerHTML = `
+                    ${day.temperatureMin.toFixed(1)}${this.getTempUnit()}
+                    /
+                    ${day.temperatureMax.toFixed(1)}${this.getTempUnit()}
+                `;
 
-                dayDiv.appendChild(dayName);
-                dayDiv.appendChild(dayIcon);
-                dayDiv.appendChild(dayTemp);
-
-                forecastDiv.appendChild(dayDiv);
+                dayDiv.appendChild(name);
+                dayDiv.appendChild(icon);
+                dayDiv.appendChild(temp);
+                bar.appendChild(dayDiv);
             });
 
-            wrapper.appendChild(forecastDiv);
+            wrapper.appendChild(bar);
         }
 
-        // --- Last update ---
+        /* ---- Last Update ---- */
         if (this.config.showLastUpdate && this.lastUpdate) {
-            const updateDiv = document.createElement("div");
-            updateDiv.className = "last-update";
-            updateDiv.style.textAlign = "right";
-            updateDiv.innerHTML = `${this.translateModule("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
-            wrapper.appendChild(updateDiv);
+            const update = document.createElement("div");
+            update.className = "last-update";
+            update.innerHTML = `
+                ${this.translateModule("LAST_UPDATE")}:
+                ${this.lastUpdate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            `;
+            wrapper.appendChild(update);
         }
 
         return wrapper;

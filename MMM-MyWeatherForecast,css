@@ -4,7 +4,6 @@
     color: #fff;
 }
 
-/* Current Weather */
 .current-weather {
     display: flex;
     align-items: center;
@@ -37,7 +36,6 @@
     color: rgba(255,255,255,0.8);
 }
 
-/* Forecast Bar */
 .forecast-bar {
     display: flex;
     justify-content: space-between;

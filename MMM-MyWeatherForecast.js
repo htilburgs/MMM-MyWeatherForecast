@@ -11,14 +11,15 @@ Module.register("MMM-MyWeatherForecast", {
         lang: "en", // Module-specific language
     },
 
-    start: function() {
-        this.weatherData = null;
-        this.lastUpdate = null;
+    // IMPORTANT: this tells MagicMirror which language to use for this module
+    language: null,
 
-        // --- Force module to use its own language ---
-        // Must happen BEFORE any this.translate() calls
+    start: function() {
+        // Force the module to use its own language immediately
         this.language = this.config.lang;
 
+        this.weatherData = null;
+        this.lastUpdate = null;
         this.scheduleUpdate();
     },
 
@@ -46,7 +47,7 @@ Module.register("MMM-MyWeatherForecast", {
             userlat: this.config.userlat,
             userlon: this.config.userlon,
             units: this.config.units,
-            lang: this.config.lang // optional for API
+            lang: this.config.lang
         });
     },
 
@@ -108,7 +109,7 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.currently;
         const forecast = this.weatherData.daily;
 
-        // Current weather
+        // --- Current weather ---
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
 
@@ -137,7 +138,7 @@ Module.register("MMM-MyWeatherForecast", {
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
 
-        // Sunrise / Sunset
+        // --- Sunrise / Sunset ---
         if (this.config.showSunTimes && this.weatherData.daily.data) {
             const todayData = this.weatherData.daily.data[0];
             const sun = document.createElement("div");
@@ -148,7 +149,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(sun);
         }
 
-        // Forecast
+        // --- Forecast ---
         if (this.config.showForecast && forecast && forecast.data) {
             const forecastDiv = document.createElement("div");
             forecastDiv.className = "forecast-bar";
@@ -179,7 +180,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(forecastDiv);
         }
 
-        // Last update (always right-aligned)
+        // --- Last update ---
         if (this.config.showLastUpdate && this.lastUpdate) {
             const updateDiv = document.createElement("div");
             updateDiv.className = "last-update";

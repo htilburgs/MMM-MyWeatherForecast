@@ -1,8 +1,3 @@
-/* MagicMirror²
- * Module: MMM-MyWeatherForecast
- * Author: HTilburgs
- */
-
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
@@ -32,10 +27,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     scheduleUpdate: function() {
-        setInterval(() => {
-            this.fetchWeather();
-        }, this.config.updateInterval);
-
+        setInterval(() => this.fetchWeather(), this.config.updateInterval);
         this.fetchWeather();
     },
 
@@ -45,14 +37,13 @@ Module.register("MMM-MyWeatherForecast", {
             const response = await fetch(url);
             const data = await response.json();
             this.weatherData = data;
-            this.updateDom();
+            this.updateDom(1000);
         } catch (error) {
             console.error("MMM-MyWeatherForecast Error:", error);
         }
     },
 
     getWeatherIcon: function(condition) {
-        // Map condition to local images
         const map = {
             "Clear": "clear.png",
             "Clouds": "cloudy.png",
@@ -67,6 +58,8 @@ Module.register("MMM-MyWeatherForecast", {
 
     getDom: function() {
         const wrapper = document.createElement("div");
+        wrapper.className = "myweather-wrapper";
+
         if (!this.weatherData) {
             wrapper.innerHTML = this.translate("LOADING");
             return wrapper;
@@ -75,61 +68,63 @@ Module.register("MMM-MyWeatherForecast", {
         const current = this.weatherData.current;
         const forecast = this.weatherData.forecast;
 
-        // Current Weather
+        // --- Current Weather ---
         const currentDiv = document.createElement("div");
         currentDiv.className = "current-weather";
 
         const icon = document.createElement("img");
         icon.src = this.getWeatherIcon(current.condition);
-        icon.className = "weather-icon";
+        icon.className = "current-icon";
 
-        const temp = document.createElement("span");
-        temp.className = "temperature";
+        const details = document.createElement("div");
+        details.className = "current-details";
+
+        const temp = document.createElement("div");
+        temp.className = "current-temp";
         temp.innerHTML = `${current.temperature}°C`;
 
-        const conditionText = document.createElement("span");
-        conditionText.className = "condition";
+        const conditionText = document.createElement("div");
+        conditionText.className = "current-condition";
         conditionText.innerHTML = this.translate(current.condition.toUpperCase());
 
-        const sunrise = document.createElement("span");
-        sunrise.className = "sunrise";
-        sunrise.innerHTML = `${this.translate("SUNRISE")}: ${current.sunrise}`;
+        const sun = document.createElement("div");
+        sun.className = "sun-times";
+        sun.innerHTML = `<span>${this.translate("SUNRISE")}: ${current.sunrise}</span> | <span>${this.translate("SUNSET")}: ${current.sunset}</span>`;
 
-        const sunset = document.createElement("span");
-        sunset.className = "sunset";
-        sunset.innerHTML = `${this.translate("SUNSET")}: ${current.sunset}`;
+        details.appendChild(temp);
+        details.appendChild(conditionText);
+        details.appendChild(sun);
 
         currentDiv.appendChild(icon);
-        currentDiv.appendChild(temp);
-        currentDiv.appendChild(conditionText);
-        currentDiv.appendChild(sunrise);
-        currentDiv.appendChild(sunset);
+        currentDiv.appendChild(details);
+
         wrapper.appendChild(currentDiv);
 
-        // Forecast (optional)
+        // --- Forecast Bar ---
         if (this.config.showForecast && forecast) {
             const forecastDiv = document.createElement("div");
-            forecastDiv.className = "forecast";
+            forecastDiv.className = "forecast-bar";
 
             forecast.slice(0, 4).forEach(day => {
                 const dayDiv = document.createElement("div");
                 dayDiv.className = "forecast-day";
 
+                const dayName = document.createElement("div");
+                dayName.className = "forecast-day-name";
+                dayName.innerHTML = day.day;
+
                 const dayIcon = document.createElement("img");
                 dayIcon.src = this.getWeatherIcon(day.condition);
-                dayIcon.className = "weather-icon-small";
+                dayIcon.className = "forecast-icon";
 
-                const dayTemp = document.createElement("span");
-                dayTemp.className = "temperature-small";
+                const dayTemp = document.createElement("div");
+                dayTemp.className = "forecast-temp";
                 dayTemp.innerHTML = `${day.min}° / ${day.max}°C`;
-
-                const dayName = document.createElement("span");
-                dayName.className = "day-name";
-                dayName.innerHTML = day.day;
 
                 dayDiv.appendChild(dayName);
                 dayDiv.appendChild(dayIcon);
                 dayDiv.appendChild(dayTemp);
+
                 forecastDiv.appendChild(dayDiv);
             });
 

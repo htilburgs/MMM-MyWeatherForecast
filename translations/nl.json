@@ -1,0 +1,12 @@
+{
+    "LOADING": "Weer laden...",
+    "SUNRISE": "Zonsopgang",
+    "SUNSET": "Zonsondergang",
+    "CLEAR": "Helder",
+    "CLOUDS": "Bewolkt",
+    "RAIN": "Regen",
+    "SNOW": "Sneeuw",
+    "THUNDERSTORM": "Onweer",
+    "DRIZZLE": "Motregen",
+    "MIST": "Mist"
+}

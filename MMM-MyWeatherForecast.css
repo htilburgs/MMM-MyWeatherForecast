@@ -13,8 +13,8 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle horizontal line */
-    padding-bottom: 10px;
+    /* Removed border-bottom */
+    padding-bottom: 0;
 }
 
 .current-icon {

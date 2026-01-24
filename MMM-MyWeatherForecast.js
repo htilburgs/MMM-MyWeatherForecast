@@ -87,7 +87,6 @@ Module.register("MMM-MyWeatherForecast", {
         return {
             standard: {
                 "clear-day": "clear.png",
-                "clear-night": "clear.png",
                 "partly-cloudy-day": "partly-cloudy.png",
                 "partly-cloudy-night": "partly-cloudy-night.png",
                 "cloudy": "cloudy.png",
@@ -114,13 +113,16 @@ Module.register("MMM-MyWeatherForecast", {
             },
 
             animated: {
-                "clear-day": "clear-day.gif",
-                "clear-night": "clear-night.gif",
-                "partly-cloudy-day": "partly-cloudy-day.gif",
-                "cloudy": "cloudy.gif",
-                "rain": "rain.gif",
-                "snow": "snow.gif",
-                "thunderstorm": "thunderstorm.gif"
+                "clear-day": "clear-day.svg",
+                "clear-night": "clear-night.svg",
+                "partly-cloudy-day": "partly-cloudy-day.svg",
+                "partly-cloudy-night": "partly-cloudy-night.svg",
+                "cloudy": "cloudy.svg",
+                "drizzle": "drizzle.svg",
+                "rain": "rain.svg",
+                "snow": "snow.svg",
+                "mist": "mist.svg",
+                "thunderstorm": "thunderstorm.svg"
             }
         };
     },

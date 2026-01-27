@@ -51,5 +51,8 @@ Add the module to your modules array in your config.js.
 * To get your latitude and longitude, you can go to https://www.latlong.net/
 * To get your Pirate Weather API key, you can go to https://pirateweather.net/en/latest/
 
+## Icons
+The icons are free icons from https://www.flaticon.com/ 
+
 ## Versions
 v1.0.0  - Initial release </br>

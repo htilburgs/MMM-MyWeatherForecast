@@ -9,7 +9,7 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: async function(notification, payload) {
         if (notification === "FETCH_WEATHER") {
             const { apiKey, userlat, userlon, units, lang } = payload;
-            const safeLang = lang || "en"; // fallback if somehow missing
+            const safeLang = lang || "en"; // fallback if missing
 
             const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${safeLang}`;
             console.log("[MMM-MyWeatherForecast] Fetching URL:", url);

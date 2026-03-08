@@ -27,8 +27,8 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        // Use module lang if set, otherwise MagicMirror language, fallback to 'en'
-        const lang = this.config.lang || (window?.MM?.config?.language) || "en";
+        // Automatic language detection: module lang or MM global language
+        const lang = this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en";
 
         fetch(this.file(`translations/${lang}.json`))
             .then(res => {
@@ -51,7 +51,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return icon.toUpperCase(); // optional: matches translation JSON keys
+        return icon.toUpperCase(); // matches translation JSON keys
     },
 
     /* -------------------- ICONS -------------------- */
@@ -72,7 +72,7 @@ Module.register("MMM-MyWeatherForecast", {
 
     fetchWeather() {
         // Automatic language detection for API
-        const lang = this.config.lang || (window?.MM?.config?.language) || "en";
+        const lang = this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en";
 
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,
@@ -95,7 +95,7 @@ Module.register("MMM-MyWeatherForecast", {
 
     getDayName(timestamp) {
         return new Date(timestamp * 1000).toLocaleDateString(
-            this.config.lang || (window?.MM?.config?.language) || "en",
+            this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en",
             { weekday: "short" }
         ).toUpperCase();
     },

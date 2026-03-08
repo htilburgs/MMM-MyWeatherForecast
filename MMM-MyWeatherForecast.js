@@ -9,7 +9,7 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: null // null = auto use MagicMirror language
+        lang: "en" // language is now only from this parameter
     },
 
     start() {
@@ -20,7 +20,6 @@ Module.register("MMM-MyWeatherForecast", {
 
     notificationReceived(notification, payload, sender) {
         if (notification === "DOM_OBJECTS_CREATED") {
-            // MM is ready, load translations and fetch weather
             this.loadTranslations();
             this.scheduleUpdate();
         }
@@ -32,8 +31,7 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        // Automatic language support
-        const lang = this.config.lang || (window.config && window.config.language) || "en";
+        const lang = this.config.lang;
 
         console.log("[MMM-MyWeatherForecast] Loading translations for language:", lang);
 
@@ -78,8 +76,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
-        // Use MagicMirror language automatically if config.lang is null
-        const lang = this.config.lang || (window.config && window.config.language) || "en";
+        const lang = this.config.lang;
 
         console.log("[MMM-MyWeatherForecast] Sending FETCH_WEATHER with language:", lang);
 
@@ -103,7 +100,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getDayName(timestamp) {
-        const lang = this.config.lang || (window.config && window.config.language) || "en";
+        const lang = this.config.lang;
         return new Date(timestamp * 1000).toLocaleDateString(lang, { weekday: "short" }).toUpperCase();
     },
 

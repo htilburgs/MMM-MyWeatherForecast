@@ -2,8 +2,7 @@
 This is a [Magic Mirror²](https://github.com/MichMich/MagicMirror) module for weather information and an optional 4-day forecast.</br>
 It only uses the weather information from PirateWeather with a free API.</br></br>
 
-<img width="415" height="335" alt="image" src="https://github.com/user-attachments/assets/b9444dd3-bb8b-4096-b54d-95042e56efd1" />
-
+<img width="415" height="302" alt="SCR-20260308-ouor" src="https://github.com/user-attachments/assets/f437156b-72c6-4d40-a540-d189bbaf0a7b" />
 
 ## Installation
 Clone this repository in your modules folder, and install dependencies:

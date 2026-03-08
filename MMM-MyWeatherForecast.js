@@ -4,7 +4,7 @@ Module.register("MMM-MyWeatherForecast", {
         latitude: "52.3676",
         longitude: "4.9041",
         units: "metric",
-        iconSet: "standard",
+        iconSet: "standard", // standard | animated | custom
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
@@ -61,8 +61,18 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- ICONS -------------------- */
     getWeatherIcon(icon) {
-        const folder = this.config.iconSet || "standard";
+        // Determine folder based on iconSet config
+        let folder = "standard"; // default
+        if (this.config.iconSet === "animated") {
+            folder = "animated";
+        } else if (this.config.iconSet === "custom") {
+            folder = "custom";
+        }
+
+        // Determine extension: svg for animated, png otherwise
         const ext = folder === "animated" ? "svg" : "png";
+
+        // Return path to icon
         return `modules/MMM-MyWeatherForecast/images/${folder}/${icon}.${ext}`;
     },
 

@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",

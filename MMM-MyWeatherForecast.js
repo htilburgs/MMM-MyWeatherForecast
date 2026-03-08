@@ -4,24 +4,23 @@ Module.register("MMM-MyWeatherForecast", {
         latitude: "52.3676",
         longitude: "4.9041",
         units: "metric",
-        iconSet: "standard", // standard | animated
+        iconSet: "standard",
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: null // null = automatically use MagicMirror global language
+        lang: null // null = auto use MagicMirror language
     },
 
     start() {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
-        // Wait for DOM_OBJECTS_CREATED before loading translations and fetching weather
     },
 
     notificationReceived(notification, payload, sender) {
         if (notification === "DOM_OBJECTS_CREATED") {
-            // Now window.config.language exists
+            // MM is ready, load translations and fetch weather
             this.loadTranslations();
             this.scheduleUpdate();
         }
@@ -33,7 +32,7 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        // Use module config language or global MagicMirror language
+        // Automatic language support
         const lang = this.config.lang || (window.config && window.config.language) || "en";
 
         console.log("[MMM-MyWeatherForecast] Loading translations for language:", lang);
@@ -79,7 +78,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
-        // Use module config language or global MagicMirror language
+        // Use MagicMirror language automatically if config.lang is null
         const lang = this.config.lang || (window.config && window.config.language) || "en";
 
         console.log("[MMM-MyWeatherForecast] Sending FETCH_WEATHER with language:", lang);

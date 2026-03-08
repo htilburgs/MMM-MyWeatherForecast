@@ -170,8 +170,21 @@ Module.register("MMM-MyWeatherForecast", {
                 sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
                 sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
                 sunDiv.appendChild(sunsetBlock);
-            } else if (riseSet === "text") {
-                sunDiv.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
+
+                } else if (riseSet === "text") {
+                    const sunriseBlock = this.createDiv("sunrise-block");
+                    sunriseBlock.appendChild(this.createDiv("sunrise-text", this.translate("SUNRISE")));
+                    sunriseBlock.appendChild(this.createDiv("sunrise-time", sunrise));
+                    sunDiv.appendChild(sunriseBlock);
+                
+                    const separator = this.createDiv("sun-separator", " | ");
+                    sunDiv.appendChild(separator);
+                
+                    const sunsetBlock = this.createDiv("sunset-block");
+                    sunsetBlock.appendChild(this.createDiv("sunset-text", this.translate("SUNSET")));
+                    sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
+                    sunDiv.appendChild(sunsetBlock);
+                
             } else if (riseSet === "both") {
                 const sunriseBlock = this.createDiv("sunrise-block");
                 sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));

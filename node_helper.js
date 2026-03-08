@@ -13,10 +13,10 @@ module.exports = NodeHelper.create({
             const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${safeLang}`;
 
             // Log URL for debugging
-            console.log("[MMM-MyWeatherForecast] Fetching URL:", url);  // Remove trailing slashes only for testing
+            console.log("[MMM-MyWeatherForecast] Fetching URL:", url);
 
             try {
-                const response = await fetch(url); // Node 18+ built-in fetch
+                const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                 const data = await response.json();
 

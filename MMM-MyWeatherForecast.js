@@ -8,9 +8,9 @@ Module.register("MMM-MyWeatherForecast", {
         showForecast: true,
         showLastUpdate: true,
         showSunTimes: true,
-        riseSetDisplay: "both", // icon | text | both
         updateInterval: 10 * 60 * 1000,
-        lang: "en"
+        lang: "en",
+        riseSetDisplay: "both" // "icon", "text", "both"
     },
 
     start() {
@@ -69,7 +69,7 @@ Module.register("MMM-MyWeatherForecast", {
             ext = "svg";
         } else if (this.config.iconSet === "custom") {
             folder = "custom";
-            ext = "png"; // strictly PNG for custom
+            ext = "png"; // only PNG allowed for custom
         }
 
         return `modules/MMM-MyWeatherForecast/images/${folder}/${icon}.${ext}`;
@@ -137,7 +137,7 @@ Module.register("MMM-MyWeatherForecast", {
 
         const { currently, daily } = this.weatherData;
 
-        // ---------------- Current Weather ----------------
+        // Current Weather
         const currentDiv = this.createDiv("current-weather");
         const icon = this.createImg("current-icon", this.getWeatherIcon(currently.icon));
         const details = this.createDiv("current-details");
@@ -148,14 +148,13 @@ Module.register("MMM-MyWeatherForecast", {
         currentDiv.appendChild(details);
         wrapper.appendChild(currentDiv);
 
-        // ---------------- Sun Times ----------------
+        // Sun Times
         if (this.config.showSunTimes && daily?.data?.[0]) {
             const today = daily.data[0];
             const sunrise = new Date(today.sunriseTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
             const sunset = new Date(today.sunsetTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
             const sunDiv = this.createDiv("sun-times");
-
             const riseSet = this.config.riseSetDisplay;
 
             if (riseSet === "icon") {
@@ -163,6 +162,9 @@ Module.register("MMM-MyWeatherForecast", {
                 sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
                 sunriseBlock.appendChild(this.createDiv("sunrise-time", sunrise));
                 sunDiv.appendChild(sunriseBlock);
+
+                const separator = this.createDiv("sun-separator", " | ");
+                sunDiv.appendChild(separator);
 
                 const sunsetBlock = this.createDiv("sunset-block");
                 sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
@@ -190,7 +192,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(sunDiv);
         }
 
-        // ---------------- Forecast ----------------
+        // Forecast
         if (this.config.showForecast && daily?.data?.length > 1) {
             wrapper.appendChild(this.createDiv("forecast-header", this.translate("FORECAST_4_DAYS")));
             const bar = this.createDiv("forecast-bar");
@@ -204,7 +206,7 @@ Module.register("MMM-MyWeatherForecast", {
             wrapper.appendChild(bar);
         }
 
-        // ---------------- Last Update ----------------
+        // Last Update
         if (this.config.showLastUpdate && this.lastUpdate) {
             wrapper.appendChild(this.createDiv("last-update", `${this.translate("LAST_UPDATE")}: ${this.lastUpdate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`));
         }

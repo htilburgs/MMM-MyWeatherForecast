@@ -12,7 +12,7 @@ module.exports = NodeHelper.create({
             const safeLang = lang || "en"; // fallback
             const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${safeLang}`;
 
-            // Log the URL for debugging
+            // Log URL for debugging
             console.log("[MMM-MyWeatherForecast] Fetching URL:", url);  // Remove trailing slashes only for testing
 
             try {

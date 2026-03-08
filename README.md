@@ -43,7 +43,7 @@ Add the module to your modules array in your config.js.
                 showLastUpdate: true,           // Show when the data is last updated
                 showSunTimes: true,             // Show Sun up and Sun Down information 
                 lang: "en",                     // Select language nl, de, en,  fr
-                iconSet: "standard",            // standard | animated | custom
+                iconSet: "standard",            // standard | animated | custom (upload your own PNG icons)
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
                 }    
 },
@@ -60,6 +60,7 @@ The animated icons are free icons from [Meteocons by Bas Milius](https://github.
 #### v1.2.0 (08-03-2026)
 * Add Iconsets for animated
 * Possibility for custom icons
+* Code optimized
 
 #### v1.1.0 (27-01-2026)
 * code and CSS optimize

@@ -16,9 +16,16 @@ Module.register("MMM-MyWeatherForecast", {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
+        // Do NOT load translations or fetch weather here
+        // Wait for DOM_OBJECTS_CREATED notification
+    },
 
-        this.loadTranslations();
-        this.scheduleUpdate();
+    notificationReceived(notification, payload, sender) {
+        if (notification === "DOM_OBJECTS_CREATED") {
+            // Now MM.config.language exists
+            this.loadTranslations();
+            this.scheduleUpdate();
+        }
     },
 
     getStyles() {
@@ -27,7 +34,6 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        // Safe MM language detection
         const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
         const lang = this.config.lang || mmLang;
 
@@ -42,7 +48,7 @@ Module.register("MMM-MyWeatherForecast", {
             })
             .catch(err => {
                 console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
-                this.moduleTranslations = {}; // fallback to key names
+                this.moduleTranslations = {}; // fallback to keys
                 this.updateDom();
             });
     },
@@ -52,7 +58,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return icon.toUpperCase(); // optional: matches translation JSON keys
+        return icon.toUpperCase(); // matches translation JSON keys
     },
 
     /* -------------------- ICONS -------------------- */

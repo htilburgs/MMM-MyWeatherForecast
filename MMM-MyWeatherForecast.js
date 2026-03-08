@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 Module.register("MMM-MyWeatherForecast", {
     defaults: {
         apiKey: "",
@@ -61,18 +63,33 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- ICONS -------------------- */
     getWeatherIcon(icon) {
-        // Determine folder based on iconSet config
         let folder = "standard"; // default
+        let ext = "png"; // default extension
+
         if (this.config.iconSet === "animated") {
             folder = "animated";
+            ext = "svg";
         } else if (this.config.iconSet === "custom") {
             folder = "custom";
+            // For custom, check if PNG or SVG exists
+            const pngPath = this.file(`images/custom/${icon}.png`);
+            const svgPath = this.file(`images/custom/${icon}.svg`);
+            try {
+                if (fs.existsSync(pngPath)) {
+                    ext = "png";
+                } else if (fs.existsSync(svgPath)) {
+                    ext = "svg";
+                } else {
+                    console.warn(`[MMM-MyWeatherForecast] Custom icon not found for '${icon}', using standard fallback.`);
+                    folder = "standard";
+                    ext = "png";
+                }
+            } catch (e) {
+                folder = "standard";
+                ext = "png";
+            }
         }
 
-        // Determine extension: svg for animated, png otherwise
-        const ext = folder === "animated" ? "svg" : "png";
-
-        // Return path to icon
         return `modules/MMM-MyWeatherForecast/images/${folder}/${icon}.${ext}`;
     },
 

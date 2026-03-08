@@ -9,11 +9,14 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: async function(notification, payload) {
         if (notification === "FETCH_WEATHER") {
             const { apiKey, userlat, userlon, units, lang } = payload;
-            const safeLang = lang || "en"; // fallback if null
+            const safeLang = lang || "en"; // fallback
             const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${safeLang}`;
 
+            // Log the URL for debugging
+            console.log("[MMM-MyWeatherForecast] Fetching URL:", url);  // Remove trailing slashes only for testing
+
             try {
-                const response = await fetch(url); // Node 18+ global fetch
+                const response = await fetch(url); // Node 18+ built-in fetch
                 if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                 const data = await response.json();
 

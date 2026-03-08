@@ -41,7 +41,8 @@ Add the module to your modules array in your config.js.
                 units: "metric",                // metric or imperial
                 showForecast: true,             // Show 4 day forecast
                 showLastUpdate: true,           // Show when the data is last updated
-                showSunTimes: true,             // Show Sun up and Sun Down information 
+                showSunTimes: true,             // Show Sunrise and Sunset information
+                riseSetDisplay: "both",         // Show Sunrise / Sunset as text | icon | both
                 lang: "en",                     // Select language nl, de, en,  fr
                 iconSet: "standard",            // standard | animated | custom (upload your own PNG icons)
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
@@ -61,6 +62,7 @@ The animated icons are free icons from [Meteocons by Bas Milius](https://github.
 * Add Iconsets for animated
 * Possibility for custom icons
 * Update language files
+* Add riseSetDisplay option in config, to show Sunrise / Sunset as text, only icon or both
 * Code optimized
 
 #### v1.1.0 (27-01-2026)

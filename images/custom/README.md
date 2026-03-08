@@ -1,0 +1,17 @@
+## Put your onw icons in this folder with the correct names:
+
+* clear-day.png
+* clear-night.png
+* clear.png
+* cloudy.png
+* drizzle.png
+* fog.png
+* mist.png
+* partly-cloudy-day.png
+* partly-cloudy-night.png
+* partly-cloudy.png
+* rain.png
+* sleet.png
+* snow.png
+* thunderstorm.png
+* wind.png

@@ -17,15 +17,15 @@ Module.register("MMM-MyWeatherForecast", {
     /* -------------------- ICONS -------------------- */
     iconMaps: {
         standard: {
-            "clear-day": "clear.png",
+            "clear-day": "clear-day.png",
             "clear-night": "clear-night.png",
-            "partly-cloudy-day": "partly-cloudy.png",
+            "partly-cloudy-day": "partly-cloudy-day.png",
             "partly-cloudy-night": "partly-cloudy-night.png",
             "cloudy": "cloudy.png",
             "rain": "rain.png",
             "snow": "snow.png",
-            "sleet": "snow.png",
-            "wind": "drizzle.png",
+            "sleet": "sleet.png",
+            "wind": "wind.png",
             "fog": "mist.png",
             "mist": "mist.png",
             "thunderstorm": "thunderstorm.png",

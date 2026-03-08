@@ -42,7 +42,7 @@ Add the module to your modules array in your config.js.
                 showLastUpdate: true,           // Show when the data is last updated
                 showSunTimes: true,             // Show Sunrise and Sunset information
                 riseSetDisplay: "both",         // Show Sunrise / Sunset as text | icon | both
-                lang: "en",                     // Select language nl, de, en,  fr
+                lang: "en",                     // Select language nl, de, en, fr
                 iconSet: "standard",            // standard | animated | custom (upload your own PNG icons)
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
                 }    

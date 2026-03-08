@@ -9,7 +9,7 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en" // language is now only from this parameter
+        lang: "en"
     },
 
     start() {
@@ -61,31 +61,17 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- ICONS -------------------- */
     getWeatherIcon(icon) {
-        let folder = "standard"; // default
-        let ext = "png"; // default extension
+        let folder = "standard";
+        let ext = "png";
 
         if (this.config.iconSet === "animated") {
             folder = "animated";
             ext = "svg";
         } else if (this.config.iconSet === "custom") {
             folder = "custom";
-            // For custom, check if PNG or SVG exists
-            const pngPath = this.file(`images/custom/${icon}.png`);
-            const svgPath = this.file(`images/custom/${icon}.svg`);
-            try {
-                if (fs.existsSync(pngPath)) {
-                    ext = "png";
-                } else if (fs.existsSync(svgPath)) {
-                    ext = "svg";
-                } else {
-                    console.warn(`[MMM-MyWeatherForecast] Custom icon not found for '${icon}', using standard fallback.`);
-                    folder = "standard";
-                    ext = "png";
-                }
-            } catch (e) {
-                folder = "standard";
-                ext = "png";
-            }
+            // For browser: try png first, then svg
+            ext = "png"; 
+            // Browser will try loading file; if missing, will fallback automatically
         }
 
         return `modules/MMM-MyWeatherForecast/images/${folder}/${icon}.${ext}`;

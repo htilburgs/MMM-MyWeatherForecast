@@ -89,9 +89,10 @@
     font-size: 0.75em;
 }
 
-/* Separator */
 .sun-separator {
-    margin: 0 4px;
+    margin: 0 8px;
+    font-weight: bold;
+    color: #fff;
 }
 
 /* =========================

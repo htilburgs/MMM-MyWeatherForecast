@@ -16,12 +16,12 @@ Module.register("MMM-MyWeatherForecast", {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
-        // Do NOT load translations or fetch weather yet
+        // Wait for DOM_OBJECTS_CREATED before loading translations and fetching weather
     },
 
     notificationReceived(notification, payload, sender) {
         if (notification === "DOM_OBJECTS_CREATED") {
-            // MM is fully initialized, MM.config.language exists
+            // Now window.config.language exists
             this.loadTranslations();
             this.scheduleUpdate();
         }
@@ -33,8 +33,8 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
-        const lang = this.config.lang || mmLang;
+        // Use module config language or global MagicMirror language
+        const lang = this.config.lang || (window.config && window.config.language) || "en";
 
         console.log("[MMM-MyWeatherForecast] Loading translations for language:", lang);
 
@@ -49,7 +49,7 @@ Module.register("MMM-MyWeatherForecast", {
             })
             .catch(err => {
                 console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
-                this.moduleTranslations = {}; // fallback to keys
+                this.moduleTranslations = {};
                 this.updateDom();
             });
     },
@@ -79,8 +79,8 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
-        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
-        const lang = this.config.lang || mmLang;
+        // Use module config language or global MagicMirror language
+        const lang = this.config.lang || (window.config && window.config.language) || "en";
 
         console.log("[MMM-MyWeatherForecast] Sending FETCH_WEATHER with language:", lang);
 
@@ -104,9 +104,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getDayName(timestamp) {
-        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
-        const lang = this.config.lang || mmLang;
-
+        const lang = this.config.lang || (window.config && window.config.language) || "en";
         return new Date(timestamp * 1000).toLocaleDateString(lang, { weekday: "short" }).toUpperCase();
     },
 

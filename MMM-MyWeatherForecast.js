@@ -9,7 +9,7 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en"
+        lang: null // null = automatic MagicMirror language
     },
 
     start() {
@@ -27,7 +27,7 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        const lang = this.config.lang || "en";
+        const lang = this.config.lang || (window?.MM?.config?.language) || "en";
         fetch(this.file(`translations/${lang}.json`))
             .then(res => {
                 if (!res.ok) throw new Error("HTTP " + res.status);
@@ -49,7 +49,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return icon.toUpperCase(); // optional: ensure keys in your translation files match API icon strings
+        return icon.toUpperCase(); // optional: matches translation JSON keys
     },
 
     /* -------------------- ICONS -------------------- */
@@ -69,12 +69,15 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
+        // Automatic language detection: module lang or MagicMirror global language
+        const lang = this.config.lang || (window?.MM?.config?.language) || "en";
+
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,
             userlat: this.config.latitude,
             userlon: this.config.longitude,
             units: this.getApiUnits(),
-            lang: this.config.lang
+            lang: lang
         });
     },
 
@@ -89,7 +92,10 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getDayName(timestamp) {
-        return new Date(timestamp * 1000).toLocaleDateString(this.config.lang, { weekday: "short" }).toUpperCase();
+        return new Date(timestamp * 1000).toLocaleDateString(
+            this.config.lang || (window?.MM?.config?.language) || "en",
+            { weekday: "short" }
+        ).toUpperCase();
     },
 
     /* -------------------- DOM HELPERS -------------------- */

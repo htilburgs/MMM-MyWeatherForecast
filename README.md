@@ -60,6 +60,7 @@ The animated icons are free icons from [Meteocons by Bas Milius](https://github.
 #### v1.2.0 (08-03-2026)
 * Add Iconsets for animated
 * Possibility for custom icons
+* Update language files
 * Code optimized
 
 #### v1.1.0 (27-01-2026)

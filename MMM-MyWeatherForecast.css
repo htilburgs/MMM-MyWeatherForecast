@@ -50,59 +50,24 @@
 /* =========================
    Sun Times
 ========================= */
-
 .sun-times {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
     width: 100%;
     margin-top: 6px;
-    font-size: 0.75em;
 }
 
 .sunrise-block,
 .sunset-block {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
-.sunset-block {
-    margin-left: auto;
-}
-
-.sun-icon {
-    width: 20px;
-    height: 20px;
-}
-
-
-/*
-.sun-times {
-    font-size: 0.75em;
-    margin: 10px 0 6px;
-    text-align: center;
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 6px;
-}
-
-.sun-times span {
-    margin: 0 4px;
-}
-
-.sun-times {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;
-   font-size: 0.75em;
-}
-
-.sunrise-block,
-.sunset-block {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.sun-divider {
+    margin: 0 6px;
 }
 
 .sun-icon {
@@ -113,7 +78,6 @@
 .sun-text {
     font-size: 0.9em;
 }
-*/
 
 /* =========================
    Forecast Header
@@ -207,4 +171,5 @@
     .forecast-icon { width: 32px; height: 32px; }
     .forecast-day { min-width: 40px; margin: 0 2px; }
     .current-condition { max-width: 120px; }
+    .sun-icon { width: 16px; height: 16px; }
 }

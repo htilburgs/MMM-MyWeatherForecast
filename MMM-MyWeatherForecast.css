@@ -57,7 +57,6 @@
     font-size: 0.75em;
     margin: 10px 0 6px;
     text-align: center;
-    width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 6px;
 }
@@ -81,7 +80,6 @@
 .sunrise-text,
 .sunset-text {
     font-size: 0.75em;
-    font-weight: bold;
 }
 
 .sunrise-time,

@@ -10,10 +10,8 @@ module.exports = NodeHelper.create({
         if (notification === "FETCH_WEATHER") {
             const { apiKey, userlat, userlon, units, lang } = payload;
 
-            // Use lang passed by module; fallback to "en" if somehow missing
-            const safeLang = lang || "en";
-            const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${safeLang}`;
-
+            // NodeHelper just uses the lang sent by module
+            const url = `https://api.pirateweather.net/forecast/${apiKey}/${userlat},${userlon}?units=${units}&lang=${lang}`;
             console.log("[MMM-MyWeatherForecast] Fetching URL:", url);
 
             try {
@@ -21,7 +19,6 @@ module.exports = NodeHelper.create({
                 if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                 const data = await response.json();
 
-                // Cache last successful fetch
                 this.cache = data;
                 this.sendSocketNotification("WEATHER_RESULT", data);
             } catch (err) {

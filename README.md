@@ -1,5 +1,5 @@
 # MMM-MyWeatherForecast
-This is a MagicMirror² module for weather information and an optional 4-day forecast.</br>
+This is a [Magic Mirror²](https://github.com/MichMich/MagicMirror) module for weather information and an optional 4-day forecast.</br>
 It only uses the weather information from PirateWeather with a free API.</br></br>
 
 <img width="415" height="335" alt="image" src="https://github.com/user-attachments/assets/b9444dd3-bb8b-4096-b54d-95042e56efd1" />
@@ -53,10 +53,16 @@ Add the module to your modules array in your config.js.
 * To get your Pirate Weather API key, you can go to https://pirateweather.net/en/latest/
 
 ## Icons
-The standard icons are free icons from https://www.flaticon.com/ 
-The animated icons are free icons from Meteocons by Bas Milius
+The standard icons are free icons from [Flaticon](https://www.flaticon.com/) <br/>
+The animated icons are free icons from [Meteocons by Bas Milius](https://github.com/basmilius/weather-icons)
 
 ## Versions
-v1.0.0        : Initial release </br>
-v1.1.0        : Code and CSS optimize </br>
-v1.2.0        : Add Iconsets
+#### v.1.2.0 (08-03-2026)
+* Add Iconsets for animated
+* Possibility for custom icons
+
+#### v1.1.0 (xx-xx-xxxx)
+* code and CSS optimize
+
+#### v1.0.0 (Initial release)
+

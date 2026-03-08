@@ -9,7 +9,7 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: null // null = automatic MagicMirror language
+        lang: null // null = automatically use MagicMirror global language
     },
 
     start() {
@@ -27,7 +27,9 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
+        // Use module lang if set, otherwise MagicMirror language, fallback to 'en'
         const lang = this.config.lang || (window?.MM?.config?.language) || "en";
+
         fetch(this.file(`translations/${lang}.json`))
             .then(res => {
                 if (!res.ok) throw new Error("HTTP " + res.status);
@@ -39,7 +41,7 @@ Module.register("MMM-MyWeatherForecast", {
             })
             .catch(err => {
                 console.error("[MMM-MyWeatherForecast] Translation load failed:", err);
-                this.moduleTranslations = {};
+                this.moduleTranslations = {}; // fallback to key names
                 this.updateDom();
             });
     },
@@ -69,7 +71,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
-        // Automatic language detection: module lang or MagicMirror global language
+        // Automatic language detection for API
         const lang = this.config.lang || (window?.MM?.config?.language) || "en";
 
         this.sendSocketNotification("FETCH_WEATHER", {

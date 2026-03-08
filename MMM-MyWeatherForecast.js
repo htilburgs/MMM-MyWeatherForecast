@@ -70,7 +70,6 @@ Module.register("MMM-MyWeatherForecast", {
             ext = "svg";
         } else if (this.config.iconSet === "custom") {
             folder = "custom";
-            // Try PNG first, then SVG (browser will fallback)
             ext = "png";
         }
 
@@ -159,22 +158,23 @@ Module.register("MMM-MyWeatherForecast", {
 
             const sunTimes = this.createDiv("sun-times");
 
+            const sunriseIconPath = this.getWeatherIcon("sunrise");
+            const sunsetIconPath = this.getWeatherIcon("sunset");
+
             if (this.config.riseSetDisplay === "icon") {
-                const sunriseIcon = this.createImg("sun-icon", this.getWeatherIcon("sunrise"));
-                const sunsetIcon = this.createImg("sun-icon", this.getWeatherIcon("sunset"));
-                sunTimes.appendChild(sunriseIcon);
+                sunTimes.appendChild(this.createImg("sun-icon", sunriseIconPath));
                 sunTimes.appendChild(this.createDiv("sun-text", `${sunrise} | ${sunset}`));
-                sunTimes.appendChild(sunsetIcon);
+                sunTimes.appendChild(this.createImg("sun-icon", sunsetIconPath));
             } else if (this.config.riseSetDisplay === "text") {
                 sunTimes.innerHTML = `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`;
             } else if (this.config.riseSetDisplay === "both") {
                 const sunriseBlock = this.createDiv("sunrise-block");
-                sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
+                sunriseBlock.appendChild(this.createImg("sun-icon", sunriseIconPath));
                 sunriseBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNRISE")}: ${sunrise}`));
 
                 const sunsetBlock = this.createDiv("sunset-block");
                 sunsetBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNSET")}: ${sunset}`));
-                sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
+                sunsetBlock.appendChild(this.createImg("sun-icon", sunsetIconPath));
 
                 sunTimes.appendChild(sunriseBlock);
                 sunTimes.appendChild(this.createDiv("sun-divider", "|"));

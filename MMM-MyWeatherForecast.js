@@ -157,21 +157,30 @@ Module.register("MMM-MyWeatherForecast", {
         
             const sunTimes = this.createDiv("sun-times");
         
-            // Sunrise block (icon left)
+            // Sunrise block
             const sunriseBlock = this.createDiv("sunrise-block");
-            sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
-            sunriseBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNRISE")}: ${sunrise}`));
+            if (this.config.riseSetDisplay === "icon" || this.config.riseSetDisplay === "both") {
+                sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
+            }
+            if (this.config.riseSetDisplay === "text" || this.config.riseSetDisplay === "both") {
+                sunriseBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNRISE")}: ${sunrise}`));
+            }
         
-            // Sunset block (icon right)
+            // Sunset block
             const sunsetBlock = this.createDiv("sunset-block");
-            sunsetBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNSET")}: ${sunset}`));
-            sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
+            if (this.config.riseSetDisplay === "text" || this.config.riseSetDisplay === "both") {
+                sunsetBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNSET")}: ${sunset}`));
+            }
+            if (this.config.riseSetDisplay === "icon" || this.config.riseSetDisplay === "both") {
+                sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
+            }
         
             sunTimes.appendChild(sunriseBlock);
             sunTimes.appendChild(sunsetBlock);
         
             wrapper.appendChild(sunTimes);
         }
+        
         // Forecast
         if (this.config.showForecast && daily?.data?.length > 1) {
             wrapper.appendChild(this.createDiv("forecast-header", this.translate("FORECAST_4_DAYS")));

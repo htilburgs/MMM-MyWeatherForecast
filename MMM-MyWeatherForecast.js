@@ -27,8 +27,9 @@ Module.register("MMM-MyWeatherForecast", {
 
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
-        // Automatic language detection: module lang or MM global language
-        const lang = this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en";
+        // Safe MM language detection
+        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
+        const lang = this.config.lang || mmLang;
 
         fetch(this.file(`translations/${lang}.json`))
             .then(res => {
@@ -51,7 +52,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return icon.toUpperCase(); // matches translation JSON keys
+        return icon.toUpperCase(); // optional: matches translation JSON keys
     },
 
     /* -------------------- ICONS -------------------- */
@@ -71,8 +72,8 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     fetchWeather() {
-        // Automatic language detection for API
-        const lang = this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en";
+        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
+        const lang = this.config.lang || mmLang;
 
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,
@@ -94,10 +95,10 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getDayName(timestamp) {
-        return new Date(timestamp * 1000).toLocaleDateString(
-            this.config.lang || (typeof MM !== "undefined" ? MM.config.language : "en") || "en",
-            { weekday: "short" }
-        ).toUpperCase();
+        const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
+        const lang = this.config.lang || mmLang;
+
+        return new Date(timestamp * 1000).toLocaleDateString(lang, { weekday: "short" }).toUpperCase();
     },
 
     /* -------------------- DOM HELPERS -------------------- */

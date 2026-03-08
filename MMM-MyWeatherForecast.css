@@ -52,11 +52,14 @@
 ========================= */
 .sun-times {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     font-size: 0.75em;
+    margin: 10px 0 6px;
+    text-align: center;
     width: 100%;
-    margin-top: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 6px;
 }
 
 .sunrise-block,
@@ -66,8 +69,8 @@
     gap: 4px;
 }
 
-.sun-divider {
-    margin: 0 6px;
+.sunset-block {
+    margin-left: auto;
 }
 
 .sun-icon {
@@ -75,8 +78,21 @@
     height: 20px;
 }
 
-.sun-text {
-    font-size: 0.9em;
+.sunrise-text,
+.sunset-text {
+    font-size: 0.75em;
+    font-weight: bold;
+}
+
+.sunrise-time,
+.sunset-time {
+    font-size: 0.75em;
+}
+
+.sun-separator {
+    margin: 0 8px;
+    font-weight: bold;
+    color: #fff;
 }
 
 /* =========================
@@ -114,10 +130,9 @@
     margin: 0 4px;
     position: relative;
     padding-top: 4px;
-    min-width: 50px; /* consistent width for translations */
+    min-width: 50px;
 }
 
-/* Vertical separator */
 .forecast-day:not(:last-child)::after {
     content: "";
     position: absolute;
@@ -128,7 +143,6 @@
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Day Name */
 .forecast-day-name {
     font-size: 0.55em;
     margin-top: 4px;
@@ -137,7 +151,6 @@
     white-space: nowrap;
 }
 
-/* Temperature */
 .forecast-temp {
     font-size: 0.55em;
     margin-top: 2px;
@@ -145,7 +158,6 @@
     line-height: 1.1;
 }
 
-/* Forecast Icon */
 .forecast-icon {
     width: 40px;
     height: 40px;
@@ -171,5 +183,4 @@
     .forecast-icon { width: 32px; height: 32px; }
     .forecast-day { min-width: 40px; margin: 0 2px; }
     .current-condition { max-width: 120px; }
-    .sun-icon { width: 16px; height: 16px; }
 }

@@ -14,5 +14,7 @@
 * rain.png
 * sleet.png
 * snow.png
+* sunrise.png
+* sunset.png
 * thunderstorm.png
 * wind.png

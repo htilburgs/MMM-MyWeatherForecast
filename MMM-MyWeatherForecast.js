@@ -16,13 +16,12 @@ Module.register("MMM-MyWeatherForecast", {
         this.weatherData = null;
         this.lastUpdate = null;
         this.moduleTranslations = {};
-        // Do NOT load translations or fetch weather here
-        // Wait for DOM_OBJECTS_CREATED notification
+        // Do NOT load translations or fetch weather yet
     },
 
     notificationReceived(notification, payload, sender) {
         if (notification === "DOM_OBJECTS_CREATED") {
-            // Now MM.config.language exists
+            // MM is fully initialized, MM.config.language exists
             this.loadTranslations();
             this.scheduleUpdate();
         }
@@ -36,6 +35,8 @@ Module.register("MMM-MyWeatherForecast", {
     loadTranslations() {
         const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
         const lang = this.config.lang || mmLang;
+
+        console.log("[MMM-MyWeatherForecast] Loading translations for language:", lang);
 
         fetch(this.file(`translations/${lang}.json`))
             .then(res => {
@@ -58,7 +59,7 @@ Module.register("MMM-MyWeatherForecast", {
     },
 
     getTranslationKey(icon) {
-        return icon.toUpperCase(); // matches translation JSON keys
+        return icon.toUpperCase();
     },
 
     /* -------------------- ICONS -------------------- */
@@ -80,6 +81,8 @@ Module.register("MMM-MyWeatherForecast", {
     fetchWeather() {
         const mmLang = (typeof MM !== "undefined" && MM.config && MM.config.language) ? MM.config.language : "en";
         const lang = this.config.lang || mmLang;
+
+        console.log("[MMM-MyWeatherForecast] Sending FETCH_WEATHER with language:", lang);
 
         this.sendSocketNotification("FETCH_WEATHER", {
             apiKey: this.config.apiKey,

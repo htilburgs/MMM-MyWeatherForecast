@@ -1,26 +1,31 @@
+/* =========================
+   Wrapper
+========================= */
 .myweather-wrapper {
     font-family: "Helvetica Neue", Arial, sans-serif;
     color: #ffffff;
-    padding: 10px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Current weather: icon left, text right */
+/* =========================
+   Current Weather
+========================= */
 .current-weather {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 10px;
-    /* No border-bottom here */
-    padding-bottom: 0;
+    margin-bottom: 8px;
 }
 
 .current-icon {
-    width: 96px;
-    height: 96px;
-    margin-right: 30px;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
 }
 
 .current-details {
@@ -30,61 +35,73 @@
 }
 
 .current-temp {
-    font-size: 2.2em;
+    font-size: 1.8em;
     font-weight: bold;
+    line-height: 1.1;
 }
 
 .current-condition {
-    font-size: 1em;
+    font-size: 0.9em;
     margin-top: 2px;
+    line-height: 1.1;
+    word-wrap: break-word;
 }
 
-/* Sunrise / Sunset text */
+/* =========================
+   Sun Times
+========================= */
 .sun-times {
-    font-size: 0.8em;
-    margin-top: 12px;
+    font-size: 0.75em;
+    margin: 10px 0 6px;
     text-align: center;
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle horizontal line */
-    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 6px;
 }
 
 .sun-times span {
-    margin: 0 5px;
+    margin: 0 4px;
 }
 
-/* Forecast Header */
+/* =========================
+   Forecast Header
+========================= */
 .forecast-header {
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     text-align: center;
     width: 100%;
     color: lightblue;
 }
 
-/* Forecast bar */
+/* =========================
+   Forecast Bar
+========================= */
 .forecast-bar {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 6px;
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* line below forecast */
-    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 6px;
 }
 
-/* Each day in forecast */
+/* =========================
+   Forecast Day
+========================= */
 .forecast-day {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* icon on top, text below */
-    margin: 0 5px;
-    position: relative; /* for vertical separator */
-    padding-top: 6px; /* shifts text slightly lower under icon */
+    justify-content: flex-start;
+    margin: 0 4px;
+    position: relative;
+    padding-top: 4px;
+    min-width: 50px; /* consistent width for translations */
 }
 
-/* Vertical separator lines between forecast days */
+/* Vertical separator */
 .forecast-day:not(:last-child)::after {
     content: "";
     position: absolute;
@@ -92,34 +109,50 @@
     top: 10%;
     height: 80%;
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Day name styling */
+/* Day Name */
 .forecast-day-name {
-    font-size: 0.5em;
-    margin-top: 6px; /* spacing under icon */
+    font-size: 0.55em;
+    margin-top: 4px;
     margin-bottom: 2px;
+    text-align: center;
+    white-space: nowrap;
 }
 
-/* Temperature styling */
+/* Temperature */
 .forecast-temp {
     font-size: 0.55em;
     margin-top: 2px;
     text-align: center;
+    line-height: 1.1;
 }
 
-/* Forecast icon */
+/* Forecast Icon */
 .forecast-icon {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
 }
 
-/* Last update */
+/* =========================
+   Last Update
+========================= */
 .last-update {
-    font-size: 0.6em;
+    font-size: 0.5em;
     color: #ccc;
-    margin-top: 5px;
-    text-align: right;   /* align right */
-    width: 100%;         /* take full width so right-align works */
+    margin-top: 4px;
+    text-align: right;
+    width: 100%;
+}
+
+/* =========================
+   Responsive Adjustments
+========================= */
+@media (max-width: 500px) {
+    .current-icon { width: 64px; height: 64px; margin-right: 12px; }
+    .current-temp { font-size: 1.5em; }
+    .forecast-icon { width: 32px; height: 32px; }
+    .forecast-day { min-width: 40px; margin: 0 2px; }
+    .current-condition { max-width: 120px; }
 }

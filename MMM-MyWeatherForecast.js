@@ -9,7 +9,8 @@ Module.register("MMM-MyWeatherForecast", {
         showLastUpdate: true,
         showSunTimes: true,
         updateInterval: 10 * 60 * 1000,
-        lang: "en"
+        lang: "en",
+        riseSetDisplay: "both" // "icon", "text", "both"
     },
 
     start() {
@@ -32,7 +33,6 @@ Module.register("MMM-MyWeatherForecast", {
     /* -------------------- TRANSLATIONS -------------------- */
     loadTranslations() {
         const lang = this.config.lang;
-
         console.log("[MMM-MyWeatherForecast] Loading translations for language:", lang);
 
         fetch(this.file(`translations/${lang}.json`))
@@ -69,9 +69,7 @@ Module.register("MMM-MyWeatherForecast", {
             ext = "svg";
         } else if (this.config.iconSet === "custom") {
             folder = "custom";
-            // For browser: try png first, then svg
-            ext = "png"; 
-            // Browser will try loading file; if missing, will fallback automatically
+            ext = "png"; // only PNG allowed for custom
         }
 
         return `modules/MMM-MyWeatherForecast/images/${folder}/${icon}.${ext}`;
@@ -88,7 +86,6 @@ Module.register("MMM-MyWeatherForecast", {
 
     fetchWeather() {
         const lang = this.config.lang;
-
         console.log("[MMM-MyWeatherForecast] Sending FETCH_WEATHER with language:", lang);
 
         this.sendSocketNotification("FETCH_WEATHER", {
@@ -156,7 +153,56 @@ Module.register("MMM-MyWeatherForecast", {
             const today = daily.data[0];
             const sunrise = new Date(today.sunriseTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
             const sunset = new Date(today.sunsetTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            wrapper.appendChild(this.createDiv("sun-times", `<span>${this.translate("SUNRISE")}: ${sunrise}</span> | <span>${this.translate("SUNSET")}: ${sunset}</span>`));
+
+            const sunDiv = this.createDiv("sun-times");
+            const riseSet = this.config.riseSetDisplay;
+
+            if (riseSet === "icon") {
+                const sunriseBlock = this.createDiv("sunrise-block");
+                sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
+                sunriseBlock.appendChild(this.createDiv("sunrise-time", sunrise));
+                sunDiv.appendChild(sunriseBlock);
+
+                const separator = this.createDiv("sun-separator", " | ");
+                sunDiv.appendChild(separator);
+
+                const sunsetBlock = this.createDiv("sunset-block");
+                sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
+                sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
+                sunDiv.appendChild(sunsetBlock);
+
+                } else if (riseSet === "text") {
+                    const sunriseBlock = this.createDiv("sunrise-block");
+                    sunriseBlock.appendChild(this.createDiv("sunrise-text", this.translate("SUNRISE")));
+                    sunriseBlock.appendChild(this.createDiv("sunrise-time", sunrise));
+                    sunDiv.appendChild(sunriseBlock);
+                
+                    const separator = this.createDiv("sun-separator", " | ");
+                    sunDiv.appendChild(separator);
+                
+                    const sunsetBlock = this.createDiv("sunset-block");
+                    sunsetBlock.appendChild(this.createDiv("sunset-text", this.translate("SUNSET")));
+                    sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
+                    sunDiv.appendChild(sunsetBlock);
+                
+            } else if (riseSet === "both") {
+                const sunriseBlock = this.createDiv("sunrise-block");
+                sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
+                sunriseBlock.appendChild(this.createDiv("sunrise-text", this.translate("SUNRISE")));
+                sunriseBlock.appendChild(this.createDiv("sunrise-time", sunrise));
+                sunDiv.appendChild(sunriseBlock);
+
+                const separator = this.createDiv("sun-separator", " | ");
+                sunDiv.appendChild(separator);
+
+                const sunsetBlock = this.createDiv("sunset-block");
+                sunsetBlock.appendChild(this.createDiv("sunset-text", this.translate("SUNSET")));
+                sunsetBlock.appendChild(this.createDiv("sunset-time", sunset));
+                sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
+                sunDiv.appendChild(sunsetBlock);
+            }
+
+            wrapper.appendChild(sunDiv);
         }
 
         // Forecast

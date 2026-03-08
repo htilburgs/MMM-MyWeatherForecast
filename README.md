@@ -2,8 +2,7 @@
 This is a [Magic Mirror²](https://github.com/MichMich/MagicMirror) module for weather information and an optional 4-day forecast.</br>
 It only uses the weather information from PirateWeather with a free API.</br></br>
 
-<img width="415" height="335" alt="image" src="https://github.com/user-attachments/assets/b9444dd3-bb8b-4096-b54d-95042e56efd1" />
-
+<img width="415" height="302" alt="SCR-20260308-ouor" src="https://github.com/user-attachments/assets/f437156b-72c6-4d40-a540-d189bbaf0a7b" />
 
 ## Installation
 Clone this repository in your modules folder, and install dependencies:
@@ -41,8 +40,9 @@ Add the module to your modules array in your config.js.
                 units: "metric",                // metric or imperial
                 showForecast: true,             // Show 4 day forecast
                 showLastUpdate: true,           // Show when the data is last updated
-                showSunTimes: true,             // Show Sun up and Sun Down information 
-                lang: "en",                     // Select language nl, de, en,  fr
+                showSunTimes: true,             // Show Sunrise and Sunset information
+                riseSetDisplay: "both",         // Show Sunrise / Sunset as text | icon | both
+                lang: "en",                     // Select language nl, de, en, fr
                 iconSet: "standard",            // standard | animated | custom (upload your own PNG icons)
                 updateInterval: 10 * 60 * 1000  //Updates every 10 minutes
                 }    
@@ -61,6 +61,7 @@ The animated icons are free icons from [Meteocons by Bas Milius](https://github.
 * Add Iconsets for animated
 * Possibility for custom icons
 * Update language files
+* Add riseSetDisplay option in config, to show Sunrise / Sunset as text, only icon or both
 * Code optimized
 
 #### v1.1.0 (27-01-2026)

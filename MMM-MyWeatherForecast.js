@@ -154,24 +154,24 @@ Module.register("MMM-MyWeatherForecast", {
             const today = daily.data[0];
             const sunrise = new Date(today.sunriseTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
             const sunset = new Date(today.sunsetTime * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        
             const sunTimes = this.createDiv("sun-times");
-
-        // Sunrise block (left)
-        const sunriseBlock = this.createDiv("sunrise-block");
-        sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
-        sunriseBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNRISE")}: ${sunrise}`));
         
-        // Sunset block (right)
-        const sunsetBlock = this.createDiv("sunset-block");
-        sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
-        sunsetBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNSET")}: ${sunset}`));
+            // Sunrise block (icon left)
+            const sunriseBlock = this.createDiv("sunrise-block");
+            sunriseBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunrise")));
+            sunriseBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNRISE")}: ${sunrise}`));
         
-        sunTimes.appendChild(sunriseBlock);
-        sunTimes.appendChild(sunsetBlock);
+            // Sunset block (icon right)
+            const sunsetBlock = this.createDiv("sunset-block");
+            sunsetBlock.appendChild(this.createDiv("sun-text", `${this.translate("SUNSET")}: ${sunset}`));
+            sunsetBlock.appendChild(this.createImg("sun-icon", this.getWeatherIcon("sunset")));
         
-        wrapper.appendChild(sunTimes);
+            sunTimes.appendChild(sunriseBlock);
+            sunTimes.appendChild(sunsetBlock);
+        
+            wrapper.appendChild(sunTimes);
         }
-
         // Forecast
         if (this.config.showForecast && daily?.data?.length > 1) {
             wrapper.appendChild(this.createDiv("forecast-header", this.translate("FORECAST_4_DAYS")));
